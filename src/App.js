@@ -1,31 +1,40 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import {
   BrowserRouter as Router,
   Route,
   Switch
 } from 'react-router-dom';
 
+import {
+    fetch_materials
+} from './common/materials/materialsAction';
+
 import Header from './pages/header/headerContainer';
+import HomeComponent from './pages/home/homeComponent';
+import {default as FoisCreator} from './pages/create/fois/foisContainer';
+import Sensors from './pages/sensors/sensorsContainer';
+
+// Viewer
+//import FoisList from './common/foisList/foisListContainer';
 import Fois from './pages/fois/foisContainer';
-import OfferingsPageContainer from './offerings/offeringsPageContainer';
 
 // Creators
-import CreatorsPageComponent from './create/creatorsPageComponent';
-import InsertSensorContainer from './create/sensor/insertSensorContainer';
+import InsertSensorContainer from './pages/create/sensor/insertSensorContainer';
 import OfferingCreator from './create/offering/offeringCreatorContainer';
-import SpecimenCreatorComponent from './create/specimen/specimenCreatorComponent';
+import Specimen from './pages/create/specimen/specimenContainer';
 
 const routes = [
     {
         path: '/',
         exact: true,
         sidebar: () => <div>home!</div>,
-        body: () => <h2>Home</h2>
+        body: HomeComponent
     },
     {
         path: '/sensors',
         sidebar: () => <div>bubblegum!</div>,
-        body: OfferingsPageContainer
+        body: Sensors
     },
     {
         path: '/fois',
@@ -33,20 +42,19 @@ const routes = [
         body: Fois
     },
     {
-        path: '/create',
-        exact: true,
-        sidebar: () => <div>shoelaces!</div>,
-        body: CreatorsPageComponent
-    },
-    {
         path: '/create/sensor',
         sidebar: () => <div>shoelaces!</div>,
         body: InsertSensorContainer
     },
     {
+        path: '/create/featureofinterest',
+        sidebar: () => <div>shoelaces!</div>,
+        body: FoisCreator
+    },
+    {
         path: '/create/specimen',
         sidebar: () => <div>shoelaces!</div>,
-        body: SpecimenCreatorComponent
+        body: Specimen
     },
     {
         path: '/create/offering',
@@ -56,12 +64,31 @@ const routes = [
 ]
 
 class App extends Component {
+
+    componentDidMount() {
+        const {
+            fetch_materials
+        } = this.props;
+        fetch_materials();
+    }
+
     render() {
         return (
             <Router>
-                <div>
+                <div style={{
+                        'overflow': 'hidden',
+                        'height': '100%',
+                        'display': 'flex',
+                        'flex': 1,
+                        'flexDirection': 'column'
+                    }}>
                     <Header/>
-                    <div style={{ flex: 1, padding: '10px' }}>
+                    <div id="appBody" style={{
+                            flexGrow: 1,
+                            padding: '1em',
+                            width: "100%",
+                            overflow: "auto"
+                        }}>
                         <Switch>
                             {
                                 routes.map((route, index) => (
@@ -80,4 +107,15 @@ class App extends Component {
     }
 }
 
-export default App;
+const mapDispatchToProps = (dispatch, ownProps) => {
+    return {
+        dispatch: dispatch,
+        fetch_materials: () => {
+            dispatch(fetch_materials());
+        }
+    }
+};
+
+export default connect(
+    null, mapDispatchToProps
+)(App);

@@ -84,7 +84,7 @@ export function register_sensor(insertsensor) {
     for (let c = 0, l = insertsensor.observableProperties.length; c<l; c++){
         observable_property.push({
             "definition": insertsensor.observableProperties[
-                c].observedProperty.def,
+                c].observedProperty.definition,
             "uom": insertsensor.observableProperties[c].uom.name,
             "type": insertsensor.observableProperties[c].resultType.definition
         });

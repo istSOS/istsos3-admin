@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 
+// istSOS components
+import {
+    setting
+} from '../setting'
 
 // OpenLayers 3
 import Map from 'ol/map';
@@ -9,18 +13,22 @@ import XYZSource from 'ol/source/xyz';
 
 import VectorLayer from 'ol/layer/vector';
 import VectorSource from 'ol/source/vector';
-//import Feature from 'ol/feature';
-//import Point from 'ol/geom/point';
+import GeoJSON from 'ol/format/geojson';
+
 import Draw from 'ol/interaction/draw';
 import Modify from 'ol/interaction/modify';
 
+//import Feature from 'ol/feature';
+//import Point from 'ol/geom/point';
+import Style from 'ol/style/style';
+import Icon from 'ol/style/icon';
+import Text from 'ol/style/text';
+import Fill from 'ol/style/fill';
+
+// Semantic UI components
+import { Menu } from 'semantic-ui-react';
 
 class FoisMapComponent extends Component {
-
-    constructor(props) {
-        super(props);
-        this.handleChange = this.handleChange.bind(this);
-    }
 
     componentDidMount() {
         this.map = new Map({
@@ -39,9 +47,37 @@ class FoisMapComponent extends Component {
         });
         this.position = new VectorSource();
         const vector = new VectorLayer({
-            source: this.position
+            source: this.position,
+            style: new Style({
+                image: new Icon({
+                    anchor: [0.5, 1],
+                    src: '/img/place.png'
+                })
+            })
         });
         this.map.addLayer(vector);
+
+        // Feature of interest layer
+        this.fois = new VectorSource();
+        this.map.addLayer(new VectorLayer({
+            source: this.fois,
+            style: function(feature, resolution) {
+                return [new Style({
+                    image: new Icon({
+                        anchor: [0.5, 1],
+                        src: '/img/place.png'
+                    }),
+                    text: new Text({
+                        textAlign: "center",
+                        textBaseline: 'middle',
+                        fill: new Fill({color: 'black'}),
+                        font: '12px sans-serif',
+                        text: feature.get('name'),
+                        offsetY: 8
+                    })
+                })]
+            }
+        }));
 
         //position.addFeature(new Feature(new Point([0, 0])));
         this.drawPointInteraction = new Draw({
@@ -54,10 +90,68 @@ class FoisMapComponent extends Component {
         });
 
         this.position.on('addfeature', this.geomAdded, this);
+        this.position.on('changefeature', this.geomChanged, this);
     }
 
-    handleChange(event) {
-        console.log("Ciao");
+    componentWillUpdate(nextProps, nextState){
+        const {
+            fois,
+            edit
+        } = nextProps;
+
+        if(edit !== undefined){
+
+            this.position.un('changefeature', this.geomChanged, this);
+            let fois = this.position.getFeatures();
+            if(fois.length>0){
+                // Already on map, just change coordinates
+                fois[0].getGeometry().setCoordinates([
+                    edit.point.x,
+                    edit.point.y
+                ]);
+            }
+
+            this.position.on('changefeature', this.geomChanged, this);
+        }
+
+        if (fois.data !== null && fois.data.length>0){
+            // Update Feature of Interest geometries
+            let features = [];
+            for (let i = 0, l = fois.data.length; i < l; i++) {
+                if(fois.data[i].shape !== null){
+                    features.push({
+                        type: 'Feature',
+                        properties: {
+                            name: fois.data[i].name
+                        },
+                        geometry: fois.data[i].shape
+                    });
+                }
+            }
+            this.fois.clear(true);
+            this.fois.addFeatures((new GeoJSON()).readFeatures({
+                type: 'FeatureCollection',
+                crs: {
+                    type: 'name',
+                    properties: {
+                        name: 'EPSG:3857'
+                    }
+                },
+                features: features
+            }))
+        }
+        /*if (foismap.update.point){
+            let fois = this.position.getFeatures();
+            if(fois.length>0){
+                // Already on map, just change coordinates
+                fois[0].getGeometry().setCoordinates([
+                    foismap.update.point.x,
+                    foismap.update.point.y
+                ]);
+            }else{
+                // Empty, then create a new one
+            }
+        }*/
     }
 
     addPoint() {
@@ -68,6 +162,10 @@ class FoisMapComponent extends Component {
         );
     }
 
+    /*
+        Function fired as soon a new feature is added to
+        the editing vector source.
+    */
     geomAdded(ev){
         const {
             geometryAdded
@@ -75,7 +173,7 @@ class FoisMapComponent extends Component {
         if (geometryAdded){
             let feature = ev.feature;
             geometryAdded(
-                "Point",
+                feature.getGeometry().getType(),
                 feature.getGeometry().getCoordinates()
             )
         }
@@ -83,55 +181,61 @@ class FoisMapComponent extends Component {
         this.map.addInteraction(this.modify);
     }
 
+    /*
+        Function fired as soon the editing vector source
+        is changed.
+    */
+    geomChanged(ev){
+        const {
+            geometryChanged
+        } = this.props;
+        if (geometryChanged){
+            let feature = ev.feature;
+            geometryChanged(
+                feature.getGeometry().getType(),
+                feature.getGeometry().getCoordinates()
+            )
+        }
+    }
+
     getToolbar(){
         const {
             sensorType
         } = this.props;
 
-        const _foidef = "http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/";
-
         let buttons = {};
-        buttons[_foidef + "SF_SamplingPoint"] = (
-            <button
+        buttons[setting._SAMPLING_POINT] = (
+            <Menu.Item
                 key="ebtn-p"
-                type="button"
-                className="btn btn-light"
-                style={{
-                    display: "flex",
-                    alignItems: "center"
-                }}
                 onClick={e => {
                     this.addPoint();
                 }}>
                     Add Location
-            </button>
+            </Menu.Item>
         );
-        buttons[_foidef + "SF_SamplingCurve"] = (
-            <button key="ebtn-c" type="button" className="btn btn-light" style={{
-                    display: "flex",
-                    alignItems: "center"
-                }}>
+        buttons[setting._SAMPLING_CURVE] = (
+            <Menu.Item key="ebtn-c">
                 Add Path
-            </button>
+            </Menu.Item>
         );
-        buttons[_foidef + "SF_SamplingSurface"] = (
-            <button key="ebtn-s" type="button" className="btn btn-light" style={{
-                    display: "flex",
-                    alignItems: "center"
-                }}>
+        buttons[setting._SAMPLING_SURFACE] = (
+            <Menu.Item key="ebtn-s">
                 Add Surface
-            </button>
+            </Menu.Item>
         );
         if(sensorType !== undefined){
             buttons = [
-                buttons[
-                    sensorType.foiType
-                ]
+                buttons[sensorType.foiType]
             ];
         }else{
             buttons = Object.values(buttons);
         }
         return buttons;
+    }
+
+    handleTest() {
+        debugger;
+        console.log(this.map);
     }
 
     render() {
@@ -140,15 +244,9 @@ class FoisMapComponent extends Component {
                     width: '100%',
                     border: 'thin solid #cccccc'
                 }}>
-                <div className="container-fluid" style={{
-                        padding: '0px'
-                    }}>
-                    <nav className="navbar navbar-light bg-light">
-                        <form className="form-inline">
-                            {this.getToolbar()}
-                        </form>
-                    </nav>
-                </div>
+                <Menu secondary style={{margin: '0px'}}>
+                    {this.getToolbar()}
+                </Menu>
                 <div className="container-fluid" id='map-container' style={{
                     padding: '0px',
                     height: '500px'

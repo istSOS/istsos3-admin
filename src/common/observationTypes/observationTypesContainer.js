@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import {
-    fetch_observation_types
+    fetch_observation_types,
+    observationTypeSelected
 } from './observationTypesAction'
 
 import ObservationTypesComponent from './observationTypesComponent';
@@ -36,6 +37,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         dispatch: dispatch,
         fetch_observation_types: () => {
             dispatch(fetch_observation_types());
+        },
+        observationTypeSelected: (selected) => {
+            dispatch(observationTypeSelected(selected));
         }
     }
 };

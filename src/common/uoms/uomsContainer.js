@@ -3,7 +3,9 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import {
-    fetch_uoms
+    fetch_uoms,
+    uomSelected,
+    openDialog
 } from './uomsAction'
 
 import UomsComponent from './uomsComponent';
@@ -36,6 +38,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         dispatch: dispatch,
         fetch_uoms: () => {
             dispatch(fetch_uoms());
+        },
+        uomSelected: (selected) => {
+            dispatch(uomSelected(selected));
+        },
+        openDialog: (open) => {
+            dispatch(openDialog(open));
         }
     }
 };

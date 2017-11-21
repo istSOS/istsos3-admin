@@ -2,7 +2,7 @@ import axios from 'axios'
 
 export function fetch(
         fetchingAction,
-        data = {}
+        data = undefined
     ){
     return function(dispatch){
         if (data !== undefined){

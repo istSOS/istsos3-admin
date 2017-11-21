@@ -3,7 +3,9 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import {
-    fetch_observable_properties
+    fetch_observable_properties,
+    observablePropertySelected,
+    openDialog
 } from './observablePropertiesAction'
 
 import ObservablePropertiesComponent from './observablePropertiesComponent';
@@ -36,6 +38,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         dispatch: dispatch,
         fetch_observable_properties: () => {
             console.log("fetch_observable_properties...");
+        },
+        observablePropertySelected: (selected) => {
+            dispatch(observablePropertySelected(selected))
+        },
+        openDialog: (open) => {
+            dispatch(openDialog(open))
         }
     }
 };

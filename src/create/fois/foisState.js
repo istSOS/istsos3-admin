@@ -1,7 +1,8 @@
 
 const initialState = {
     isFetching: false,
-    data: []
+    data: [],
+    draw: null
 };
 
 const fois = (state = initialState, action) => {

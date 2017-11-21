@@ -10,8 +10,7 @@ import Uoms
 import ObservationTypes
     from '../../common/observationTypes/observationTypesContainer';
 
-import Fois
-    from '../fois/foisContainer';
+import FoisMap from '../../common/foisMap/foisMapContainer.js';
 
 class InsertSensorComponent extends Component {
 
@@ -203,7 +202,7 @@ class InsertSensorComponent extends Component {
 
                     </div>
                     <div className="col">
-                        <Fois
+                        <FoisMap
                             sensorType={
                                 insertsensor.sensorTypes[
                                     insertsensor.sensorType

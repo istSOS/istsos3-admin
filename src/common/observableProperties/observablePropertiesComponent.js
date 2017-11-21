@@ -1,5 +1,16 @@
 import React, { Component } from 'react';
 
+// istSOS components
+import ObservablePropertyForm from '../observablePropertyForm/observablePropertyFormContainer';
+
+// Semantic UI components
+import {
+    Form,
+    Header,
+    Modal,
+    Button
+} from 'semantic-ui-react'
+
 class ObservablePropertiesComponent extends Component {
 
     constructor(props) {
@@ -7,75 +18,70 @@ class ObservablePropertiesComponent extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
-    handleChange(event) {
+    handleChange(event, data) {
         const {
-            onSelected,
-            observableproperties
+            //onSelected,
+            observableproperties,
+            observablePropertySelected
         } = this.props;
-        if(onSelected!==undefined){
-            for (var i = 0; i < observableproperties.data.length; i++) {
-                if(observableproperties.data[i].def === event.target.value){
-                    onSelected({
-                        ...observableproperties.data[i]
-                    });
-                    break;
-                }
+        for (var i = 0; i < observableproperties.data.length; i++) {
+            if(observableproperties.data[i].definition === data.value){
+                observablePropertySelected(observableproperties.data[i]);
+                break;
             }
         }
     }
 
     render() {
         const {
-            observableproperties
+            observableproperties,
+            openDialog
         } = this.props;
-        //const data = observableproperties.data;
+        var options = observableproperties.data.map((oty, key) => {
+            return {
+                key: oty.id,
+                value: oty.definition,
+                text: oty.name,
+                content: <Header
+                    content={oty.name}
+                    subheader={oty.definition} />
+            }
+        })
+        console.log(observableproperties.selected);
         return (
-            <select
-                className="form-control"
-                onChange={this.handleChange}>
-                <option
-                    value=''>
-                    Select an observable property..
-                </option>
+            <Form.Group>
+                <Form.Select
+                    fluid={true}
+                    options={options}
+                    placeholder='Select an observable property..'
+                    onChange={this.handleChange}/>
                 {
-                    observableproperties.data.map((oty, key) => (
-                        <option
-                            key={"oty-row-"+oty.def}
-                            value={oty.def}>
-                            {oty.def}
-                        </option>
-                    ))
+                    observableproperties.dialog===true?
+                    <Modal
+                        open={observableproperties.dialog}
+                        onClose={(e) => {
+                            openDialog(false)
+                        }}>
+                        <Modal.Header>
+                            Add a new observable property
+                        </Modal.Header>
+                        <Modal.Content>
+                            <Modal.Description>
+                                <ObservablePropertyForm/>
+                            </Modal.Description>
+                        </Modal.Content>
+                    </Modal>:
+                    <Button
+                        circular
+                        secondary
+                        icon='add'
+                        onClick={(e) => {
+                            openDialog(true)
+                        }}/>
                 }
-            </select>
+            </Form.Group>
         )
     }
 };
 
 export default ObservablePropertiesComponent;
-
-/*<table className="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Definition</th>
-            <th>Description</th>
-        </tr>
-    </thead>
-    <tbody>
-        {
-            observationtypes.data.map((oty, key) => (
-                <tr key={"oty-row-"+oty.def}>
-                    <td>
-                        {oty.name}
-                    </td>
-                    <th scope="row">
-                        {oty.def}
-                    </th>
-                    <td>
-                        {oty.description}
-                    </td>
-                </tr>
-            ))
-        }
-    </tbody>
-</table>*/

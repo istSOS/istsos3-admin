@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 
+// Semantic UI components
+import { Form, Header } from 'semantic-ui-react'
+
+
 class ObservationTypesComponent extends Component {
 
     constructor(props) {
@@ -7,19 +11,15 @@ class ObservationTypesComponent extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
-    handleChange(event) {
+    handleChange(event, data) {
         const {
-            onSelected,
+            observationTypeSelected,
             observationtypes
         } = this.props;
-        if(onSelected!==undefined){
-            for (var i = 0; i < observationtypes.data.length; i++) {
-                if(observationtypes.data[i].definition === event.target.value){
-                    onSelected({
-                        ...observationtypes.data[i]
-                    });
-                    break;
-                }
+        for (var i = 0; i < observationtypes.data.length; i++) {
+            if(observationtypes.data[i].definition === data.value){
+                observationTypeSelected(observationtypes.data[i]);
+                break;
             }
         }
     }
@@ -28,28 +28,25 @@ class ObservationTypesComponent extends Component {
         const {
             observationtypes
         } = this.props;
-        const data = observationtypes.data;
+        var options = observationtypes.data.map((oty, key) => {
+            return {
+                key: "oty-opt-" + oty.id,
+                value: oty.definition,
+                text: oty.description,
+                content: <Header
+                    content={oty.description}
+                    subheader={oty.definition} />
+            }
+        });
         return (
-            <select
-                className="form-control"
-                onChange={this.handleChange}>
-                <option
-                    value=''>
-                    Select the result type..
-                </option>
-                {
-                    data.map((observationtype, key) => (
-                        observationtype.id !== 14 && observationtype.id !== 2 ?
-                        <option
-                            key={"oty-opt-"+observationtype.id}
-                            value={observationtype.definition}>
-                            {observationtype.description}
-                        </option>: null
-                    ))
-                }
-            </select>
-        )
+            <Form.Select
+              fluid={true}
+              options={options}
+              placeholder='Select an unit of measure'
+              onChange={this.handleChange}/>
+          )
     }
+
 };
 
 export default ObservationTypesComponent;

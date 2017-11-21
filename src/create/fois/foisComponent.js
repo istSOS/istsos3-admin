@@ -61,6 +61,8 @@ class FoisComponent extends Component {
     }
 
     addPoint() {
+        console.log("addPoint");
+        debugger;
         this.position.clear(true);
         this.map.removeInteraction(this.modify);
         this.map.addInteraction(
@@ -69,6 +71,8 @@ class FoisComponent extends Component {
     }
 
     geomAdded(ev){
+        console.log("geomadded");
+        debugger;
         const {
             geometryAdded
         } = this.props;

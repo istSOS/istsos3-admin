@@ -1,96 +1,121 @@
 import React, { Component } from 'react';
 import { translate } from 'react-i18next';
 import {
-  Link
+    withRouter
 } from 'react-router-dom';
+
+// Semantic UI components
+import { Menu, Dropdown, Icon } from 'semantic-ui-react';
 
 class HeaderComponent extends Component {
 
     render() {
         // const {login, checkCredential} = this.props;
-        const { t } = this.props;
-        //debugger;
+        const { t, location, history } = this.props;
         return (
-            <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                <a className="navbar-brand" href="/">IS3</a>
-                <button className="navbar-toggler"
-                        type="button"
-                        data-toggle="collapse"
-                        data-target="#navbarSupportedContent"
-                        aria-controls="navbarSupportedContent"
-                        aria-expanded="false"
-                        aria-label="Toggle navigation">
-                    <span className="navbar-toggler-icon"></span>
-                </button>
-                <div
-                    className="collapse navbar-collapse"
-                    id="navbarSupportedContent">
-                    <ul className="navbar-nav mr-auto">
-                        <li className="nav-item active">
-                            <Link className="nav-link"
-                                to="/">Home</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link"
-                                to="/sensors">{t('sensors')}</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link"
-                                to="/fois">{t('featureofinterests')}</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link"
-                                to="/fois">{t('specimen')}</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link"
-                                to="/">
-                                Chart &nbsp;
-                                <span className="badge badge-secondary">4</span>
-                            </Link>
-                        </li>
-                    </ul>
-                    <ul className="navbar-nav">
-                        <li className="nav-item dropdown">
-                            <Link className="nav-link dropdown-toggle"
-                                to="/create">
-                                Add</Link>
-                        </li>
-                    </ul>
-                </div>
-                {/*<div className="row">
-                    <div className="col-md-auto">
-                        <Link className="btn btn-sm btn-outline-dark"
-                            to="/">Home</Link>
-                    </div>
-                    <div className="col-md-auto">
-                        <Link className="btn btn-sm btn-outline-dark"
-                            to="/sensors">{t('sensors')}</Link>
-                    </div>
-                    <div className="col-md-auto">
-                        <Link className="btn btn-sm btn-outline-dark"
-                            to="/fois">{t('featureofinterests')}</Link>
-                    </div>
-                    <div className="col-6"></div>
-                    <div className="col" style={{
-                            textAlign: 'right'
-                        }}>
-                        <button className="btn btn-sm btn-outline-dark">
-                          Chart &nbsp;
-                          <span className="badge badge-secondary">4</span>
-                        </button>
-                    </div>
-                    <div className="col-md-auto" style={{
-                            textAlign: 'right'
-                        }}>
-                        <Link className="btn btn-sm btn-outline-dark"
-                            to="/fois">Add</Link>
-                    </div>
-                </div>
-                    */}
-            </nav>
+            <Menu stackable inverted>
+                <Menu.Item style={{
+                        "fontWeight": "bold",
+                        //"color": "#65f102"
+                    }}>
+                    <img src='/img/logo_icon.png' alt="logo" style={{
+                        margin: '0 7px',
+                        width: '1.5em'
+                    }}/>
+                    istSOS
+                </Menu.Item>
+                <Menu.Item
+                    active={location === '/'}
+                    onClick={
+                        e => {
+                            history.push("/");
+                        }
+                    }>
+                    Home
+                </Menu.Item>
+                <Menu.Item
+                    active={location === '/sensors'}
+                    onClick={
+                        e => {
+                            history.push("/sensors");
+                        }
+                    }>
+                    {t('sensors')}
+                </Menu.Item>
+                <Menu.Item
+                    active={location === '/fois'}
+                    onClick={
+                        e => {
+                            history.push("/fois");
+                        }
+                    }>
+                    {t('featureofinterests')}
+                </Menu.Item>
+                <Menu.Item
+                    active={location === '/charts'}
+                    onClick={
+                        e => {
+                            history.push("/");
+                        }
+                    }>
+                    Chart
+                </Menu.Item>
+
+                <Menu.Menu position='right'>
+                    <Dropdown item text='Add &nbsp;' icon="add">
+                        <Dropdown.Menu>
+                            <Dropdown.Item
+                                onClick={
+                                    e => {
+                                        history.push("/create/specimen");
+                                    }
+                                }>
+                                <Icon name='table' />
+                                Data
+                            </Dropdown.Item>
+                            <Dropdown.Item
+                                onClick={
+                                    e => {
+                                        history.push("/create/sensor");
+                                    }
+                                }>
+                                <Icon name='podcast' />
+                                Sensor
+                            </Dropdown.Item>
+                            <Dropdown.Item
+                                onClick={
+                                    e => {
+                                        history.push("/create/featureofinterest");
+                                    }
+                                }>
+                                <Icon name='marker' />
+                                Feature of interest
+                            </Dropdown.Item>
+                            <Dropdown.Item
+                                onClick={
+                                    e => {
+                                        history.push("/create/specimen");
+                                    }
+                                }>
+                                <Icon name='lab' />
+                                Specimen
+                            </Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                    <Dropdown item text='Settings'>
+                        <Dropdown.Menu>
+                            <Dropdown.Header>System settings</Dropdown.Header>
+                            <Dropdown.Item>Database</Dropdown.Item>
+                            <Dropdown.Header>Personal settings</Dropdown.Header>
+                            <Dropdown.Item>User</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </Menu.Menu>
+            </Menu>
         )
     }
 };
 
-export default translate('header')(HeaderComponent);
+export default translate('header')(
+    withRouter(HeaderComponent)
+);

@@ -1,6 +1,7 @@
 
 const initialState = {
     isFetching: false,
+    selected: null,
     data: []
 };
 
@@ -20,6 +21,12 @@ const fois = (state = initialState, action) => {
                 ...state,
                 isFetching: false,
                 data: action.json.data
+            };
+
+        case 'FOI_SELECTED':
+            return {
+                ...state,
+                selected: action.identifier
             };
 
         default:
