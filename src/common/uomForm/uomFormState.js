@@ -47,6 +47,7 @@ const uomform = (state = initialState, action) => {
         case 'UOM_FORM_SET_NAME':
             return {
                 ...state,
+                validatingName: true,
                 data: {
                     ...state.data,
                     name: action.name

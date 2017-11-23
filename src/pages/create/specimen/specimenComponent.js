@@ -9,15 +9,9 @@ import {
 // Semantic UI components
 import {
     Grid,
-    //Form,
-    //Input,
-    //TextArea,
     Header,
-    //Step,
-    //Image,
     Button,
     Card,
-    //Divider,
     List
 } from 'semantic-ui-react';
 
@@ -51,7 +45,18 @@ class SpecimenComponent extends Component {
                         Specimen metadata
                     </Header>
                     <SpecimenForm
-                        template={sensorsList.selected.config.specimen}/>
+                        template={sensorsList.selected.config.specimen}
+                        layout="metadata"/>
+                </div>
+            );
+        }else if (insertspecimen.wizardPage === 3){
+            return (
+                <div>
+                    <Header as='h3'>
+                        Specimen processing
+                    </Header>
+                    <SpecimenForm
+                        layout="processing"/>
                 </div>
             );
         }else{
@@ -108,7 +113,8 @@ class SpecimenComponent extends Component {
             insertspecimen,
             specimenform,
             sensorsList,
-            nextWizardPage
+            nextWizardPage,
+            createSpecimen
         } = this.props;
         const page = insertspecimen.wizardPage;
 
@@ -128,8 +134,32 @@ class SpecimenComponent extends Component {
                 <div className='ui two buttons'>
                     <Button
                         primary
-                        content='Checkout'
+                        content='Continue'
                         onClick={nextWizardPage}/>
+                </div>
+            )
+        }else if(page === 2 && (
+                specimenform.valid === false)){
+            return (
+                <div className='ui two buttons'>
+                    <Button
+                    disabled
+                    content='Continue'/>
+                </div>
+            )
+        }else if(page === 3 && (
+                specimenform.valid === true)){
+            return (
+                <div className='ui two buttons'>
+                    <Button
+                        primary
+                        content='Checkout'
+                        onClick={(e) => {
+                            createSpecimen({
+                                ...specimenform.data,
+                                offering: sensorsList.selected.name
+                            });
+                        }}/>
                 </div>
             )
         }else if(page === 2 && (

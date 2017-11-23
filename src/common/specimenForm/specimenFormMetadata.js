@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 // istSOS components
 import {
     Material,
+    SamplingMethods,
     Uoms
 } from '../../common';
 
@@ -11,10 +12,16 @@ import {
     Form,
     Input,
     TextArea,
+    Popup
     //Grid
 } from 'semantic-ui-react';
 
-class SpecimenFormComponent extends Component {
+// Date picker
+import moment from 'moment';
+import DayPicker from 'react-day-picker';
+import 'react-day-picker/lib/style.css';
+
+class SpecimenFormMetadata extends Component {
 
     constructor(props) {
         super(props);
@@ -76,6 +83,12 @@ class SpecimenFormComponent extends Component {
         }
     }
 
+    handleDayClick = (day, { selected }) => {
+        this.props.setSpecimenSampligDate(
+            moment(day).format("YYYY-MM-DD")
+        );
+    }
+
     render() {
         const {
             specimenform,
@@ -85,7 +98,6 @@ class SpecimenFormComponent extends Component {
         } = this.props;
         return (
             <Form widths='equal'>
-                Valid: {""+specimenform.valid}
                 <Form.Field required>
                     <label>Material</label>
                     <Material
@@ -152,19 +164,36 @@ class SpecimenFormComponent extends Component {
                                 specimenform.date.length>0?
                                 " (YYYY-MM-DD)": null
                             }</label>
-                            <Input
-                                icon='calendar'
-                                iconPosition='left'
-                                id="specimenTimeD"
-                                placeholder='YYYY-MM-DD'
-                                onChange={
-                                    this.handleSpecimentChange.bind(this)
+                            <Popup
+                                trigger={
+                                    <Input
+                                        icon='calendar'
+                                        iconPosition='left'
+                                        id="specimenTimeD"
+                                        placeholder='YYYY-MM-DD'
+                                        onChange={
+                                            this.handleSpecimentChange.bind(this)
+                                        }
+                                        value={specimenform.date}
+                                        autoComplete="off"
+                                        autoCorrect="off"
+                                        autoCapitalize="off"
+                                        spellCheck="false"/>
                                 }
-                                value={specimenform.date}
-                                autoComplete="off"
-                                autoCorrect="off"
-                                autoCapitalize="off"
-                                spellCheck="false"/>
+                                on='focus'
+                                position='bottom left'>
+                                <Popup.Content>
+                                    <DayPicker
+                                        showWeekNumbers
+                                        onDayClick={this.handleDayClick}
+                                        selectedDays={
+                                            specimenform.date?
+                                            moment(specimenform.date).toDate():
+                                            undefined
+                                        }
+                                        todayButton="Today"/>
+                                </Popup.Content>
+                            </Popup>
                         </Form.Field>
                         <Form.Field
                             error={!specimenform.samplingTimeValid}>
@@ -188,6 +217,12 @@ class SpecimenFormComponent extends Component {
                         </Form.Field>
                     </Form.Group>: null
                 }
+                <Form.Field>
+                    <label>Sampling method</label>
+                    <SamplingMethods
+                        onSelected={setMaterial}/>
+                </Form.Field>
+
                 <Form.Group widths='equal'>
                     <Form.Field required>
                         <label>
@@ -261,4 +296,4 @@ class SpecimenFormComponent extends Component {
     }
 };
 
-export default SpecimenFormComponent;
+export default SpecimenFormMetadata;

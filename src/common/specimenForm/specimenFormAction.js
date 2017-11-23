@@ -120,3 +120,46 @@ export const setSpecimenSpecimenType = (text) => {
         specimenType: text
     }
 }
+
+// Processing Details
+
+export const addProcessingDetails = () => {
+    return {
+        type: 'ADD_SPECIMEN_PROCESSING_DETAILS'
+    }
+}
+
+export const removeProcessingDetails = (index) => {
+    return {
+        type: 'REMOVE_SPECIMEN_PROCESSING_DETAILS',
+        index: index
+    }
+}
+
+export const setOperator = (operator) => {
+    return {
+        type: 'SET_SPECIMEN_PROCESSING_OPERATOR',
+        operator: operator
+    }
+}
+
+export const setProcessingDetails = (details) => {
+    return {
+        type: 'SET_SPECIMEN_PROCESSING_DETAILS',
+        details: details
+    }
+}
+
+export const setSpecimenProcessingDetailsDate = (text) => {
+    return {
+        type: 'SET_SPECIMEN_FORM_PROCESSING_DATE',
+        date: text
+    }
+}
+
+export const setSpecimenProcessingDetailsTime = (text) => {
+    return {
+        type: 'SET_SPECIMEN_FORM_PROCESSING_TIME',
+        time: text
+    }
+}

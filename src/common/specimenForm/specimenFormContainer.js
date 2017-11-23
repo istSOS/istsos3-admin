@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 // istSOS components
-import SpecimenFormComponent from './specimenFormComponent';
+import SpecimenFormMetadata from './specimenFormMetadata';
+import SpecimenFormProcessing from './specimenFormProcessing';
 
 // Semantic UI components
 import {
@@ -20,7 +21,13 @@ import {
     setSpecimenSamplingLocation,
     setSpecimenCurrentLocation,
     setSpecimenSpecimenType,
-    loadSpecimen
+    loadSpecimen,
+    setOperator,
+    setProcessingDetails,
+    setSpecimenProcessingDetailsDate,
+    setSpecimenProcessingDetailsTime,
+    addProcessingDetails,
+    removeProcessingDetails
 } from './specimenFormAction';
 
 class SpecimenForm extends Component {
@@ -36,10 +43,20 @@ class SpecimenForm extends Component {
         }
     }
     render() {
-        return(
-            <SpecimenFormComponent
-                {...this.props}/>
-        );
+        const {
+            layout
+        } = this.props;
+        if (layout==="metadata"){
+            return(
+                <SpecimenFormMetadata
+                    {...this.props}/>
+            );
+        }else if(layout==="processing"){
+            return(
+                <SpecimenFormProcessing
+                    {...this.props}/>
+            );
+        }
     }
 };
 
@@ -47,6 +64,7 @@ const mapStateToProps = (state, ownProps) => {
     return {
         specimenform: state.specimenform,
         hidden: [],
+        layout: 'metadata',
         ...ownProps
     };
 };
@@ -98,6 +116,25 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         setSpecimenSamplingMethod: (text) => {
             dispatch(setSpecimenSamplingMethod(text));
+        },
+        // processing details actions
+        setOperator: (operator) => {
+            dispatch(setOperator(operator));
+        },
+        setProcessingDetails: (details) => {
+            dispatch(setProcessingDetails(details));
+        },
+        setSpecimenProcessingDetailsDate: (text) => {
+            dispatch(setSpecimenProcessingDetailsDate(text));
+        },
+        setSpecimenProcessingDetailsTime: (text) => {
+            dispatch(setSpecimenProcessingDetailsTime(text));
+        },
+        addProcessingDetails: () => {
+            dispatch(addProcessingDetails());
+        },
+        removeProcessingDetails: (index) => {
+            dispatch(removeProcessingDetails(index));
         }
     }
 };

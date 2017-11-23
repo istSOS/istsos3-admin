@@ -61,7 +61,7 @@ class UomsComponent extends Component {
                         uoms.selected: null
                     }
                     onChange={this.handleChange}/>
-              {
+                {
                   uoms.dialog===true?
                   <Modal
                       open={uoms.dialog}
@@ -84,7 +84,7 @@ class UomsComponent extends Component {
                       onClick={(e) => {
                           openDialog(true)
                       }}/>
-              }
+                }
           </Form.Group>
         )
     }

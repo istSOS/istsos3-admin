@@ -6,6 +6,11 @@ import {
     setSpecimenWizardPage,
     nextWizardPage
 } from './specimenAction';
+
+import {
+    createSpecimen
+} from '../../../actions/creators';
+
 import SpecimenComponent from './specimenComponent';
 
 class Specimen extends Component {
@@ -34,6 +39,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         nextWizardPage: () => {
             dispatch(nextWizardPage());
+        },
+        createSpecimen: (entity) => {
+            dispatch(createSpecimen(entity));
         }
     }
 };

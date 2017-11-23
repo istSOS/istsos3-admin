@@ -10,6 +10,14 @@ const initialState = {
     identifierValid: false,
     identifierValidated: false,
 
+    // Processing details
+    processingDetailsValid: false,
+    operator: null,
+    details: null,
+    processingTimeValid: false,
+    processingDate: "",
+    processingTime: "",
+
     // Sampling Time validation
     samplingTimeValid: false,
 
@@ -17,9 +25,11 @@ const initialState = {
     date: "",
     time: "",
     data: {
+        id: null,
+        description: "",
         identifier: "",
         name: "",
-        description: "",
+        specimenType: "",
         materialClass: "",
         samplingTime: {
             timeInstant: {
@@ -27,14 +37,27 @@ const initialState = {
             }
         },
         samplingMethod: "",
-        currentLocation: "",
+        processingDetails: [],
         size: {
             value: "",
             uom: ""
         },
-        sampledFeature: "",
-        specimenType: ""
+        currentLocation: "",
+        sampledFeature: ""
     }
+}
+
+const isprocessingDetailsValid = (state) => {
+    if (state.operator===null){
+        return false;
+    }else if (state.details===null) {
+        return false;
+    }else if (state.processingDate==="" || state.processingDate===null) {
+        return false;
+    }else if (state.processingTime==="" || state.processingTime===null) {
+        return false;
+    }
+    return true;
 }
 
 const isValid = (state) => {
@@ -243,6 +266,63 @@ const specimenform = (state = initialState, action) => {
                 }
             };
 
+        case 'ADD_SPECIMEN_PROCESSING_DETAILS':
+            copy = {
+                ...state,
+                data: {
+                    ...state.data,
+                    processingDetails: [
+                        ...state.data.processingDetails,
+                        {
+                            processOperator: state.operator,
+                            processingDetails: state.details,
+                            time: state.processingDate + "T" + state.processingTime + "+01:00"
+                        }
+                    ]
+                }
+            };
+            copy.processingDetailsValid = isprocessingDetailsValid(copy)
+            return copy;
+
+        case 'REMOVE_SPECIMEN_PROCESSING_DETAILS':
+            copy = {
+                ...state
+            }
+            copy.data.processingDetails.splice(action.index, 1);
+            return copy;
+
+        case 'SET_SPECIMEN_PROCESSING_OPERATOR':
+            copy = {
+                ...state,
+                operator: action.operator
+            };
+            copy.processingDetailsValid = isprocessingDetailsValid(copy)
+            return copy;
+
+
+        case 'SET_SPECIMEN_PROCESSING_DETAILS':
+            copy = {
+                ...state,
+                details: action.details
+            };
+            copy.processingDetailsValid = isprocessingDetailsValid(copy)
+            return copy;
+
+        case 'SET_SPECIMEN_FORM_PROCESSING_DATE':
+            copy = {
+                ...state,
+                processingDate: action.date
+            };
+            copy.processingDetailsValid = isprocessingDetailsValid(copy)
+            return copy;
+
+        case 'SET_SPECIMEN_FORM_PROCESSING_TIME':
+            copy = {
+                ...state,
+                processingTime: action.time
+            };
+            copy.processingDetailsValid = isprocessingDetailsValid(copy)
+            return copy;
 
         default:
             return state;

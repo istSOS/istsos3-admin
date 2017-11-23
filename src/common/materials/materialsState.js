@@ -3,7 +3,7 @@ import { normalize, schema } from 'normalizr';
 const initialState = {
     isFetching: false,
     data: [],
-    selected: 'http://www.opengis.net/def/material/OGC-OM/2.0/rock',
+    selected: '',
     normalized: []
 };
 
