@@ -9,7 +9,7 @@ import {
 
 import {
     createSpecimen
-} from '../../../actions/creators';
+} from '../../../common/specimenForm/specimenFormAction';
 
 import SpecimenComponent from './specimenComponent';
 

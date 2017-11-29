@@ -27,6 +27,7 @@ import sensorsList from '../common/sensorsList/sensorsListState';
 import humans from '../common/humans/humansState';
 import humanform from '../common/humanForm/humanFormState';
 import processingdetails from '../common/processingDetails/processingDetailsState';
+import processingdetailform from '../common/processingDetailForm/processingDetailFormState';
 
 const appState = combineReducers({
     offerings,
@@ -54,7 +55,8 @@ const appState = combineReducers({
     sensorsList,
     humans,
     humanform,
-    processingdetails
+    processingdetails,
+    processingdetailform
 });
 
 export default appState;

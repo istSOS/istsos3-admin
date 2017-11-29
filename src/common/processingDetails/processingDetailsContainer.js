@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import {
-    fetchProcessingDetails
+    fetchProcessingDetails,
+    openDialog
 } from './processingDetailsAction';
 
 import ProcessingDetailsDropdown from './processingDetailsDropdown';
@@ -48,6 +49,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         dispatch: dispatch,
         fetchProcessingDetails: () => {
             dispatch(fetchProcessingDetails());
+        },
+        openDialog: (open) => {
+            dispatch(openDialog(open))
         }
     }
 };

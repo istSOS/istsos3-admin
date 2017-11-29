@@ -30,7 +30,6 @@ const humans = (state = initialState, action) => {
             };
 
         case 'CREATE_HUMAN_OK':
-            debugger;
             return {
                 ...state,
                 dialog: false,

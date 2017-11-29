@@ -113,8 +113,7 @@ class SpecimenComponent extends Component {
             insertspecimen,
             specimenform,
             sensorsList,
-            nextWizardPage,
-            createSpecimen
+            nextWizardPage
         } = this.props;
         const page = insertspecimen.wizardPage;
 
@@ -154,12 +153,7 @@ class SpecimenComponent extends Component {
                     <Button
                         primary
                         content='Checkout'
-                        onClick={(e) => {
-                            createSpecimen({
-                                ...specimenform.data,
-                                offering: sensorsList.selected.name
-                            });
-                        }}/>
+                        onClick={this.finish.bind(this)}/>
                 </div>
             )
         }else if(page === 2 && (
@@ -181,6 +175,20 @@ class SpecimenComponent extends Component {
             );
         }
         //return null;
+    }
+
+    finish = () => {
+        const {
+            sensorsList,
+            specimenform,
+            createSpecimen
+        } = this.props;
+        let data = {
+            ...specimenform.data
+        };
+        data.offering = sensorsList.selected.offering;
+        data.sampledFeature.href = sensorsList.selected.sampled_foi;
+        createSpecimen(data);
     }
 
     render() {

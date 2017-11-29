@@ -160,17 +160,17 @@ class SpecimenFormProcessing extends Component {
                                         </Table.Cell>
                                         <Table.Cell singleLine>
                                             {
-                                                pd.processOperator.username
+                                                pd.processOperator.href
                                             }
                                         </Table.Cell>
                                         <Table.Cell singleLine>
                                             {
-                                                pd.processingDetails.name
+                                                pd.processingDetails.href
                                             }
                                         </Table.Cell>
                                         <Table.Cell singleLine>
                                             {
-                                                pd.time
+                                                pd.time.timeInstant.instant
                                             }
                                         </Table.Cell>
                                         <Table.Cell singleLine>

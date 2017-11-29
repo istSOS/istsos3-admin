@@ -12,6 +12,7 @@ export {default as ObservableProperties} from "./observableProperties/observable
 export {default as ObservationTypes} from "./observationTypes/observationTypesContainer";
 export {default as Humans} from "./humans/humansContainer";
 export {default as ProcessingDetails} from "./processingDetails/processingDetailsContainer";
+export {default as ProcessingDetailForm} from "./processingDetailForm/processingDetailFormContainer";
 export {default as FoisMap} from "./foisMap/foisMapContainer";
 export {default as SensorsList} from "./sensorsList/sensorsListContainer";
 export {default as ObservablePropertyForm} from "./observablePropertyForm/observablePropertyFormContainer";

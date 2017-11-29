@@ -1,8 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+// istSOS components
+import ProcessingDetailForm from '../processingDetailForm/processingDetailFormContainer';
+
 // Semantic UI components
-import { Form, Header } from 'semantic-ui-react'
+import {
+    Form,
+    Header,
+    Modal,
+    Button
+} from 'semantic-ui-react';
 
 class ProcessingDetailsDropdown extends Component {
     handleChange(event, data) {
@@ -22,6 +30,7 @@ class ProcessingDetailsDropdown extends Component {
     render() {
         const {
             processingdetails,
+            openDialog,
             value
         } = this.props;
         var options = processingdetails.data.map((pd) => {
@@ -35,14 +44,40 @@ class ProcessingDetailsDropdown extends Component {
             }
         });
         return (
-            <Form.Select
-                fluid={true}
-                options={options}
-                placeholder='Select the processing detail'
-                value={
-                    value !== null? value.identifier: null
+            <Form.Group>
+                <Form.Select
+                    fluid={true}
+                    options={options}
+                    placeholder='Processing detail'
+                    value={
+                        value !== null? value.identifier: null
+                    }
+                    onChange={this.handleChange.bind(this)}/>
+                {
+                    processingdetails.dialog===true?
+                    <Modal
+                        open={processingdetails.dialog}
+                        onClose={(e) => {
+                            openDialog(false)
+                        }}>
+                        <Modal.Header>
+                            Add a new Processing Detail
+                        </Modal.Header>
+                        <Modal.Content>
+                            <Modal.Description>
+                                <ProcessingDetailForm/>
+                            </Modal.Description>
+                        </Modal.Content>
+                    </Modal>:
+                    <Button
+                        circular
+                        secondary
+                        icon='add'
+                        onClick={(e) => {
+                            openDialog(true)
+                        }}/>
                 }
-                onChange={this.handleChange.bind(this)}/>
+            </Form.Group>
         )
     }
 };

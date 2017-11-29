@@ -25,25 +25,31 @@ const initialState = {
     date: "",
     time: "",
     data: {
-        id: null,
+        name: "",
         description: "",
         identifier: "",
-        name: "",
-        specimenType: "",
-        materialClass: "",
+        sampledFeature: {
+            href: ""
+        },
+        materialClass: null,
         samplingTime: {
             timeInstant: {
                 instant: ""
             }
         },
-        samplingMethod: "",
+        samplingMethod: null,
+        //samplingLocation: "",
         processingDetails: [],
         size: {
             value: "",
             uom: ""
         },
-        currentLocation: "",
-        sampledFeature: ""
+        currentLocation: {
+            href: ""
+        },
+        specimenType: {
+            href: ""
+        }
     }
 }
 
@@ -76,7 +82,6 @@ const isValid = (state) => {
     if(state.identifierValid === false){
         return false;
     }
-    console.log(state.data.samplingTime.timeInstant.instant);
     if(state.samplingTimeValid === false){
         return false;
     }
@@ -108,7 +113,10 @@ const specimenform = (state = initialState, action) => {
                 ...state,
                 data: {
                     ...state.data,
-                    materialClass: action.material.definition
+                    materialClass: action.material.definition === null?
+                        null: {
+                            href: action.material.definition
+                        }
                 }
             }
             copy.valid = isValid(copy);
@@ -253,7 +261,9 @@ const specimenform = (state = initialState, action) => {
                 ...state,
                 data: {
                     ...state.data,
-                    sampledFeature: action.sampledFeature
+                    sampledFeature: {
+                        href: action.sampledFeature
+                    }
                 }
             };
 
@@ -262,7 +272,10 @@ const specimenform = (state = initialState, action) => {
                 ...state,
                 data: {
                     ...state.data,
-                    samplingMethod: action.samplingMethod
+                    samplingMethod: action.samplingMethod === null?
+                        null: {
+                            href: action.samplingMethod
+                        }
                 }
             };
 
@@ -274,9 +287,17 @@ const specimenform = (state = initialState, action) => {
                     processingDetails: [
                         ...state.data.processingDetails,
                         {
-                            processOperator: state.operator,
-                            processingDetails: state.details,
-                            time: state.processingDate + "T" + state.processingTime + "+01:00"
+                            processOperator: {
+                                href: state.operator.username
+                            },
+                            processingDetails: {
+                                href: state.details.identifier
+                            },
+                            time: {
+                                timeInstant: {
+                                    instant: state.processingDate + "T" + state.processingTime + "+01:00"
+                                }
+                            }
                         }
                     ]
                 }

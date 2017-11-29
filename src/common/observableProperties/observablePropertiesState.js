@@ -2,8 +2,6 @@
 const initialState = {
     isFetching: false,
     dialog: false,
-    isAdding: false,
-    isDeleting: false,
     selected: null,
     data: []
 };

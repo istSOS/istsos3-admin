@@ -2,11 +2,17 @@ import {
     fetch
 } from '../../actions/fetch';
 
+export function createSpecimen(specimen){
+    return fetch(
+        "CREATE_SPECIMEN", specimen
+    );
+};
+
 export function loadSpecimen(specimen){
     return function(dispatch){
         dispatch({
             type: 'MATERIALS_SELECTED',
-            selected: specimen.materialClass
+            selected: specimen.materialClass.href
         });
         dispatch({
             type: 'UOM_SELECTED',

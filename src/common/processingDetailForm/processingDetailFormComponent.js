@@ -12,50 +12,50 @@ import {
 } from 'semantic-ui-react';
 
 
-class ObservablePropertyFormComponent extends Component {
+class ProcessingDetailFormComponent extends Component {
 
     constructor(props) {
         super(props);
         this.checkname = false;
-        this.checkdefinition = false;
+        this.checkidentifier = false;
     }
 
     handleChange(event) {
         switch (event.target.id) {
-            case "observablePropertyFormName":
+            case "processingDetailFormName":
                 let name = event.target.value;
-                this.props.setObservablePropertyName(name);
+                this.props.setProcessingDetailName(name);
                 if(this.checkname){
                     clearTimeout(this.checkname);
                     this.checkname = false;
                 }
                 if(name.length > 0){
                     this.checkname = setTimeout(function(){
-                        if(this.props.observablepropertyform.data.name.length > 0){
-                            this.props.checkObservablePropertyName(
-                                this.props.observablepropertyform.data.name);
+                        if(this.props.processingdetailform.data.name.length > 0){
+                            this.props.checkProcessingDetailName(
+                                this.props.processingdetailform.data.name);
                         }
                     }.bind(this), 1000);
                 }
                 break;
-            case "observablePropertyFormDefinition":
+            case "processingDetailFormIdentifier":
                 let def = event.target.value.replace(/[^\w:-]\./gi, '');
-                this.props.setObservablePropertyDefinition(def);
-                if(this.checkdefinition){
-                    clearTimeout(this.checkdefinition);
-                    this.checkdefinition = false;
+                this.props.setProcessingDetailIdentifier(def);
+                if(this.checkidentifier){
+                    clearTimeout(this.checkidentifier);
+                    this.checkidentifier = false;
                 }
                 if(def.length > 0){
-                    this.checkdefinition = setTimeout(function(){
-                        if(this.props.observablepropertyform.data.definition.length > 0){
-                            this.props.checkObservablePropertyDefinition(
-                                this.props.observablepropertyform.data.definition);
+                    this.checkidentifier = setTimeout(function(){
+                        if(this.props.processingdetailform.data.identifier.length > 0){
+                            this.props.checkProcessingDetailIdentifier(
+                                this.props.processingdetailform.data.identifier);
                         }
                     }.bind(this), 1000);
                 }
                 break;
-            case "sensorFormDescription":
-                this.props.setSensorDescription(
+            case "processingDetailFormDescription":
+                this.props.setProcessingDetailDescription(
                     event.target.value
                 );
                 break;
@@ -65,8 +65,8 @@ class ObservablePropertyFormComponent extends Component {
 
     render() {
         const {
-            observablepropertyform,
-            createObservableProperty
+            processingdetailform,
+            createProcessingDetail
         } = this.props;
         return (
             <Form>
@@ -75,62 +75,62 @@ class ObservablePropertyFormComponent extends Component {
                     <Input
                         iconPosition='left'
                         icon={
-                            observablepropertyform.nameValidated === true
-                                && observablepropertyform.nameValid === true?
+                            processingdetailform.nameValidated === true
+                                && processingdetailform.nameValid === true?
                             'check': 'delete'
                         }
-                        loading={observablepropertyform.validatingName}
-                        id="observablePropertyFormName"
+                        loading={processingdetailform.validatingName}
+                        id="processingDetailFormName"
                         placeholder='Give this observable property a name'
                         onChange={
                             this.handleChange.bind(this)
                         }
-                        value={observablepropertyform.data.name}
+                        value={processingdetailform.data.name}
                         autoComplete="off"
                         autoCorrect="off"
                         autoCapitalize="off"
                         spellCheck="false"/>
                     {
-                        observablepropertyform.nameValidated
-                            && !observablepropertyform.nameValid?
+                        processingdetailform.nameValidated
+                            && !processingdetailform.nameValid?
                         <Label
                             basic
                             color='red'
                             pointing>
                             <Icon name='warning sign' />
-                            Observable property name already assigned
+                            Processing detail name already assigned
                         </Label>: null
                     }
                 </Form.Field>
                 <Form.Field required>
-                    <label>Definition</label>
+                    <label>Identifier</label>
                     <Input
                         iconPosition='left'
                         icon={
-                            observablepropertyform.definitionValidated === true
-                                && observablepropertyform.definitionValid === true?
+                            processingdetailform.identifierValidated === true
+                                && processingdetailform.identifierValid === true?
                             'check': 'delete'
                         }
-                        loading={observablepropertyform.validatingDefinition}
-                        id="observablePropertyFormDefinition"
+                        loading={processingdetailform.validatingIdentifier}
+                        id="processingDetailFormIdentifier"
                         placeholder='Observable property identifier'
                         onChange={
                             this.handleChange.bind(this)
                         }
-                        value={observablepropertyform.data.definition}
+                        value={processingdetailform.data.identifier}
                         autoComplete="off"
                         autoCorrect="off"
                         autoCapitalize="off"
                         spellCheck="false"/>
                     {
-                        observablepropertyform.definitionValidated
-                            && !observablepropertyform.definitionValid?
+                        processingdetailform.identifierValidated
+                            && !processingdetailform.identifierValid?
                         <Label
                             basic
                             color='red'
                             pointing>
                             <Icon name='warning sign' />
-                            Observable property already exists
+                            Processing detail already exists
                         </Label>:
                         <Label
                             basic
@@ -144,21 +144,21 @@ class ObservablePropertyFormComponent extends Component {
                 <Form.Field>
                     <label>Description</label>
                     <TextArea
-                        id="observablePropertyFormDescription"
+                        id="processingDetailFormDescription"
                         placeholder='Describe this observable property'
                         onChange={
                             this.handleChange.bind(this)
                         }
-                        value={observablepropertyform.data.description}/>
+                        value={processingdetailform.data.description}/>
                 </Form.Field>
                 <Container>
                     <Button
                         primary
-                        disabled={!observablepropertyform.valid}
-                        loading={observablepropertyform.saving}
+                        disabled={!processingdetailform.valid}
+                        loading={processingdetailform.saving}
                         onClick={e => {
-                            createObservableProperty(
-                                observablepropertyform.data
+                            createProcessingDetail(
+                                processingdetailform.data
                             );
                         }}>
                         Add
@@ -169,4 +169,4 @@ class ObservablePropertyFormComponent extends Component {
     }
 };
 
-export default ObservablePropertyFormComponent;
+export default ProcessingDetailFormComponent;

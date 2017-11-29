@@ -265,7 +265,7 @@ class SpecimenFormMetadata extends Component {
                         onChange={
                             this.handleSpecimentChange.bind(this)
                         }
-                        value={specimenform.data.currentLocation}
+                        value={specimenform.data.currentLocation.href}
                         autoComplete="off"
                         autoCorrect="off"
                         autoCapitalize="off"
@@ -285,7 +285,7 @@ class SpecimenFormMetadata extends Component {
                         onChange={
                             this.handleSpecimentChange.bind(this)
                         }
-                        value={specimenform.data.specimenType}
+                        value={specimenform.data.specimenType.href}
                         autoComplete="off"
                         autoCorrect="off"
                         autoCapitalize="off"
