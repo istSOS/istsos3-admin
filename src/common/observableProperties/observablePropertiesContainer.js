@@ -9,6 +9,7 @@ import {
 } from './observablePropertiesAction'
 
 import ObservablePropertiesComponent from './observablePropertiesComponent';
+import ObservablePropertiesDropdown from './observablePropertiesDropdown';
 
 class ObservableProperties extends Component {
 
@@ -20,16 +21,28 @@ class ObservableProperties extends Component {
     }
 
     render() {
-        return(
-            <ObservablePropertiesComponent
-                {...this.props}/>
-        );
+        const {
+            layout
+        } = this.props;
+        if (layout==="select"){
+            return(
+                <ObservablePropertiesComponent
+                    {...this.props}/>
+            );
+        }else if(layout==="dropdown"){
+            return(
+                <ObservablePropertiesDropdown
+                    {...this.props}/>
+            );
+        }
     }
 };
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        observableproperties: state.observableproperties
+        observableproperties: state.observableproperties,
+        layout: 'select',
+        ...ownProps
     };
 };
 

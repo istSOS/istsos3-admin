@@ -14,15 +14,15 @@
         "normalizr": "^3.2.4",
         "ol": "^4.4.1",
         "react": "^16.0.0",
-        "react-day-picker": "^6.2.1",
+        "react-day-picker": "^7.0.2",
         "react-dom": "^16.0.0",
-        "react-i18next": "^6.0.2",
+        "react-i18next": "^7.0.2",
         "react-redux": "^5.0.6",
         "react-router-dom": "^4.2.2",
         "redux": "^3.7.2",
         "redux-thunk": "^2.2.0",
         "semantic-ui-css": "^2.2.12",
-        "semantic-ui-react": "^0.76.0"
+        "semantic-ui-react": "^0.77.0"
     },
     "scripts": {
         "start": "react-scripts start",

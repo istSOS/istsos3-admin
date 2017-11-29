@@ -12,7 +12,9 @@ import {
     Header,
     Button,
     Card,
-    List
+    List,
+    Container,
+    Icon
 } from 'semantic-ui-react';
 
 class SpecimenComponent extends Component {
@@ -20,7 +22,8 @@ class SpecimenComponent extends Component {
     getPage() {
         const {
             insertspecimen,
-            sensorsList
+            sensorsList,
+            setSpecimenWizardPage
         } = this.props;
         if (insertspecimen.wizardPage === 1){
             return (
@@ -39,13 +42,19 @@ class SpecimenComponent extends Component {
                 </div>
             );
         }else if (insertspecimen.wizardPage === 2){
+            let specimen = undefined;
+            if(sensorsList.selected.hasOwnProperty("config") &&
+                sensorsList.selected.config !== null &&
+                sensorsList.selected.config.hasOwnProperty("specimen")){
+                specimen = {...sensorsList.selected.config.specimen};
+            }
             return (
                 <div>
                     <Header as='h3'>
                         Specimen metadata
                     </Header>
                     <SpecimenForm
-                        template={sensorsList.selected.config.specimen}
+                        template={specimen}
                         layout="metadata"/>
                 </div>
             );
@@ -58,6 +67,28 @@ class SpecimenComponent extends Component {
                     <SpecimenForm
                         layout="processing"/>
                 </div>
+            );
+        }else if (insertspecimen.wizardPage === 4){
+            return (
+                <Container text textAlign='center'>
+                    <Header as='h2' icon>
+                        <Icon name='flag checkered' circular />
+                        <Header.Content>
+                            Specimen Registered Successfully
+                        </Header.Content>
+                    </Header>
+                    <p>
+                        Would you like to register a new specimen?
+                    </p>
+                    <p>
+                        <Button
+                            primary
+                            content='Yes'
+                            onClick={e => {
+                                setSpecimenWizardPage(1);
+                            }}/>
+                    </p>
+                </Container>
             );
         }else{
             return null;

@@ -47,17 +47,16 @@ class ObservablePropertiesComponent extends Component {
                     subheader={oty.definition} />
             }
         })
-        console.log(observableproperties.selected);
         return (
             <Form.Group>
                 <Form.Select
                     fluid={true}
                     options={options}
                     placeholder='Select an observable property..'
-                    onChange={this.handleChange}/>
-                {
-                    observableproperties.dialog===true?
+                    onChange={this.handleChange}/>,
+                observableproperties.dialog===true?
                     <Modal
+                        key="opc-md"
                         open={observableproperties.dialog}
                         onClose={(e) => {
                             openDialog(false)
@@ -78,7 +77,7 @@ class ObservablePropertiesComponent extends Component {
                         onClick={(e) => {
                             openDialog(true)
                         }}/>
-                }
+                        
             </Form.Group>
         )
     }

@@ -2,7 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import {
-    fetch_sensors
+    fetch_sensors,
+
+    // Filtering actions
+    applyObsPropFilter,
+    resetDateRange,
+    updateDateRange
 } from './sensorsAction';
 
 import SensorsComponent from './sensorsComponent';
@@ -35,6 +40,15 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         dispatch: dispatch,
         fetch_sensors: (filters = undefined) => {
             dispatch(fetch_sensors(filters));
+        },
+        applyObsPropFilter: (filters) => {
+            dispatch(applyObsPropFilter(filters));
+        },
+        resetDateRange: () => {
+            dispatch(resetDateRange());
+        },
+        updateDateRange: (data) => {
+            dispatch(updateDateRange(data));
         }
     }
 };

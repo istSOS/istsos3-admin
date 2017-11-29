@@ -3,6 +3,7 @@ import moment from 'moment';
 
 const initialState = {
     isFetching: false,
+    hidden: [],
     valid: false,
 
     // Identifier validation
@@ -70,7 +71,7 @@ const isValid = (state) => {
     if (state.data.identifier===""){
         return false;
     }
-    if(state.data.materialClass===""){
+    if(state.data.materialClass===null){
         return false;
     }
     if(state.data.size.value===""){
@@ -82,6 +83,8 @@ const isValid = (state) => {
     if(state.identifierValid === false){
         return false;
     }
+    /*if(state.hidden.indexOf('time') === -1
+            && state.samplingTimeValid === false){*/
     if(state.samplingTimeValid === false){
         return false;
     }
@@ -129,6 +132,12 @@ const specimenform = (state = initialState, action) => {
                     ...state.data,
                     description: action.description
                 }
+            };
+
+        case 'SET_SPECIMEN_FORM_HIDDEN':
+            return {
+                ...state,
+                hidden: action.hidden
             };
 
         case 'SET_SPECIMEN_FORM_SAMPLING_DATE':
@@ -243,7 +252,9 @@ const specimenform = (state = initialState, action) => {
                 ...state,
                 data: {
                     ...state.data,
-                    currentLocation: action.currentLocation
+                    currentLocation: {
+                        href: action.currentLocation
+                    }
                 }
             };
 
@@ -252,7 +263,9 @@ const specimenform = (state = initialState, action) => {
                 ...state,
                 data: {
                     ...state.data,
-                    specimenType: action.specimenType
+                    specimenType: {
+                        href: action.specimenType
+                    }
                 }
             };
 

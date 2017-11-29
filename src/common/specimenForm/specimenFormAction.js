@@ -34,6 +34,13 @@ export const setMaterial = (material) => {
     }
 }
 
+export const setHidden = (hidden) => {
+    return {
+        type: 'SET_SPECIMEN_FORM_HIDDEN',
+        hidden: hidden
+    }
+}
+
 export const setSpecimenIdentifier = (text) => {
     return {
         type: 'SET_SPECIMEN_FORM_IDENTIFIER',

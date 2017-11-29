@@ -93,7 +93,7 @@ const insertsensor = (state = initialState, action) => {
         case 'SKIP_SPECIMEN_WIZARD_PAGE':
             return {
                 ...state,
-                wizardPage: (state.wizardPage + 1),
+                wizardPage: (state.wizardPage + 2),
                 skipSpecimen: true
             };
 

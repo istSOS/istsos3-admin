@@ -27,7 +27,8 @@ import {
     setSpecimenProcessingDetailsDate,
     setSpecimenProcessingDetailsTime,
     addProcessingDetails,
-    removeProcessingDetails
+    removeProcessingDetails,
+    setHidden
 } from './specimenFormAction';
 
 class SpecimenForm extends Component {
@@ -35,8 +36,11 @@ class SpecimenForm extends Component {
         const {
             template,
             loadSpecimen,
-            checkSpecimenIdentifier
+            checkSpecimenIdentifier,
+            hidden,
+            setHidden
         } = this.props;
+        setHidden(hidden);
         if(template!==undefined){
             loadSpecimen(template);
             checkSpecimenIdentifier(template.identifier);
@@ -74,6 +78,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         dispatch: dispatch,
         loadSpecimen: (specimen) => {
             dispatch(loadSpecimen(specimen))
+        },
+        setHidden: (hidden) => {
+            dispatch(setHidden(hidden))
         },
         setMaterial: (material) => {
             dispatch(setMaterial(material))

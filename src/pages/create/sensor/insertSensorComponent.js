@@ -164,8 +164,22 @@ class InsertSensorComponent extends Component {
                 </div>
             );
         }else if(insertsensor.wizardPage === 3){
-            return <SensorForm layout="metadata"/>;
+            return (
+                <div>
+                    <Header as='h3'>
+                        Specimen template
+                    </Header>
+                    <p>
+                        Each time a new speciment will be collected this is
+                        the date that will be filled by default.
+                    </p>
+                    <SpecimenForm
+                        layout="processing"/>
+                </div>
+            );
         }else if(insertsensor.wizardPage === 4){
+            return <SensorForm layout="metadata"/>;
+        }else if(insertsensor.wizardPage === 5){
             if (insertsensor.observationType === '1'){
                 return <SensorForm
                     single={true}
@@ -174,7 +188,7 @@ class InsertSensorComponent extends Component {
                 return <SensorForm
                     layout="observedproperties"/>;
             }
-        }else if(insertsensor.wizardPage === 5){
+        }else if(insertsensor.wizardPage === 6){
             // Configure the Foi creation page to
             // the specific type
             return <Fois
@@ -184,7 +198,7 @@ class InsertSensorComponent extends Component {
                     ].foiType
                 }
                 hideButton={true}/>;
-        }else if(insertsensor.wizardPage === 6){
+        }else if(insertsensor.wizardPage === 7){
             // Configure the Foi creation page to
             // the specific type
             return <Container text textAlign='center'>
@@ -222,9 +236,9 @@ class InsertSensorComponent extends Component {
             if (insertsensor.sensorType === '3'){
                 nextWizardPage();
             }else{
-                setWizardPage(3);
+                setWizardPage(4);
             }
-        } else if(page === 4){
+        } else if(page === 5){
             // Check if sensorform is valid
             nextWizardPage();
         }else {
@@ -332,7 +346,7 @@ class InsertSensorComponent extends Component {
                 </List.Item>
             )
         }
-        if(page > 3){
+        if(page > 4){
             meta.push(
                 <List.Item key="is_meta_3">
                     <List.Icon name='check' />
@@ -345,7 +359,7 @@ class InsertSensorComponent extends Component {
                 </List.Item>
             )
         }
-        if(page > 4){
+        if(page > 5){
             meta.push(
                 <List.Item key="is_meta_4">
                     <List.Icon name='check' />
@@ -378,13 +392,13 @@ class InsertSensorComponent extends Component {
                     the data format for this sensor of the new sensor.
                 </div>
             )
-        }else if (page === 3) {
+        }else if (page === 4) {
             content.push(
                 <div key="is_desc">
                     Fill all the metadata describing the new sensor.
                 </div>
             )
-        }else if (page === 4) {
+        }else if (page === 5) {
             if (insertsensor.observationType === "1"){
                 content.push(
                     <div key="is_desc">
@@ -424,15 +438,23 @@ class InsertSensorComponent extends Component {
                         onClick={this.handleNext.bind(this)}/>
                 </div>
             )
-        }else if(page === 2/* && specimenform.valid specimenform is valid*/){
+        }else if(page === 2){
             return (
                 <div>
-                    <Button
-                        primary={specimenform.valid}
-                        disabled={!specimenform.valid}
-                        fluid
-                        content='Continue'
-                        onClick={this.handleNext.bind(this)}/>
+                    {
+                        specimenform.valid?
+                        <Button
+                            primary={specimenform.valid}
+                            disabled={!specimenform.valid}
+                            fluid
+                            content='Continue'
+                            onClick={this.handleNext.bind(this)}/>:
+                        <Button
+                            disabled
+                            fluid
+                            content='Continue'/>
+
+                    }
                     <Divider horizontal>Or</Divider>
                     <Button
                         primary={!specimenform.valid}
@@ -442,7 +464,7 @@ class InsertSensorComponent extends Component {
                         onClick={skipSpecimentPage}/>
                 </div>
             )
-        }else if(page === 3 && sensorform.valid /*sensorform is valid*/){
+        }else if(page === 3){
             return (
                 <div className='ui two buttons'>
                     <Button
@@ -451,7 +473,16 @@ class InsertSensorComponent extends Component {
                         onClick={this.handleNext.bind(this)}/>
                 </div>
             )
-        }else if(page === 4 && (
+        }else if(page === 4 && sensorform.valid /*sensorform is valid*/){
+            return (
+                <div className='ui two buttons'>
+                    <Button
+                        primary
+                        content='Continue'
+                        onClick={this.handleNext.bind(this)}/>
+                </div>
+            )
+        }else if(page === 5 && (
                 (
                     insertsensor.observationType === '1'
                     && sensorform.observableProperties.length === 1
@@ -468,7 +499,7 @@ class InsertSensorComponent extends Component {
                         onClick={this.handleNext.bind(this)}/>
                 </div>
             )
-        }else if (page === 5 && (
+        }else if (page === 6 && (
                 (!foisstate.editing && fois.selected!==null) ||
                 (foisstate.editing && foiform.valid===true))) {
             return (
@@ -506,7 +537,7 @@ class InsertSensorComponent extends Component {
                 </Grid.Column>
                 <Grid.Column width={3}>
                     {
-                        insertsensor.wizardPage === 6? null:
+                        insertsensor.wizardPage === 7? null:
                         <Card>
                             <Card.Content>
                                 <Card.Header>
