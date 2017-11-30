@@ -5,14 +5,15 @@ import {
 
 export function fetch_sensors(filters = undefined) {
     return fetch(
-        'FETCH_SENSORS'
+        'FETCH_SENSORS',
+        filters
     );
 };
 
-export const applyObsPropFilter = (obsprop) => {
+export const applyObsPropFilter = (observedProperties) => {
     return {
         type: 'APPLY_OBSP_PROP_FILTER',
-        obsprop: obsprop
+        observedProperties: observedProperties
     }
 };
 

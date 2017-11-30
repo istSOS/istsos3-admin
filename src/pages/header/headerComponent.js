@@ -5,7 +5,12 @@ import {
 } from 'react-router-dom';
 
 // Semantic UI components
-import { Menu, Dropdown, Icon } from 'semantic-ui-react';
+import {
+    Menu,
+    Dropdown,
+    Icon,
+    Label
+} from 'semantic-ui-react';
 
 class HeaderComponent extends Component {
 
@@ -59,6 +64,7 @@ class HeaderComponent extends Component {
                         }
                     }>
                     Chart
+                    <Label circular color="red">2</Label>
                 </Menu.Item>
 
                 <Menu.Menu position='right'>

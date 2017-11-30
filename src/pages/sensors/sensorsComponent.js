@@ -4,120 +4,59 @@ import React, { Component } from 'react';
 import {
     ObservableProperties
 } from '../../common';
+import FoisMap from '../../common/foisMap/foisMapContainer';
+
+import DateRange from '../../common/dateRange';
 
 // Semantic UI components
 import {
     Card,
     Form,
-    Icon,
+    Rating,
+    //Icon,
+    //Popup,
     Grid,
     Button,
     Segment,
     Header,
-    Popup
+    Divider,
+    Table,
+    Statistic
 } from 'semantic-ui-react'
 
 // Date picker
-import moment from 'moment';
-import DayPicker, { DateUtils } from 'react-day-picker';
-import 'react-day-picker/lib/style.css';
+// import moment from 'moment';
 
 
 class SensorsComponent extends Component {
 
-    constructor(props) {
-        super(props);
-        this.handleDayClick = this.handleDayClick.bind(this);
-        this.handleDayMouseEnter = this.handleDayMouseEnter.bind(this);
-    }
-    isSelectingFirstDay(from, to, day) {
-        const isBeforeFirstDay = from && DateUtils.isDayBefore(day, from);
-        const isRangeSelected = from && to;
-        return !from || isBeforeFirstDay || isRangeSelected;
-    }
-    handleDayClick(day) {
-        const { sensors, updateDateRange } = this.props;
-        const from = sensors.from;
-        const to = sensors.to;
-        if (from && to && day >= from && day <= to) {
-            this.handleResetClick();
-            return;
-        }
-        if (this.isSelectingFirstDay(from, to, day)) {
-            updateDateRange({
-                from: day,
-                to: null,
-                enteredTo: null,
-            });
-        } else {
-            updateDateRange({
-                to: day,
-                enteredTo: day,
-            });
-        }
-    }
-    handleDayMouseEnter(day) {
-        const { sensors, updateDateRange } = this.props;
-        const from = sensors.from;
-        const to = sensors.to;
-        if (!this.isSelectingFirstDay(from, to, day)) {
-            updateDateRange({
-                enteredTo: day,
-            });
-        }
-    }
-    handleResetClick() {
-        const { resetDateRange } = this.props;
-        resetDateRange();
-    }
+
     render() {
         const {
             sensors,
-            applyObsPropFilter
+            applyObsPropFilter,
+            updateDateRange,
+            fetch_sensors
         } = this.props;
-        const selectedDays = [sensors.from, { from: sensors.from, to: sensors.enteredTo }];
+        let sensorsCnt = Object.keys(sensors.data).length;
         return (
             <div style={{padding: '1em'}}>
                 <Grid columns={3}>
                     <Grid.Column width={4}>
-                        <Segment raised>
-                            <Header as='h3'>
-                                Search for sensors
-                            </Header>
-                                <p>
-                                Apply filters to find sensors
-                                </p>
+                        <Header sub attached='top'>
+                            Search for sensors
+                        </Header>
+                        <Segment attached>
                             <Form>
-                            <ObservableProperties
-                                layout="dropdown"
-                                onSelected={applyObsPropFilter}/>
-                            <Form.Group widths='equal'>
-                                <Popup
-                                    trigger={
-                                        <Form.Input
-                                        icon={<Icon name='calendar'
-                                        inverted circular />}
-                                        placeholder='From date' />
-                                    }
-                                    on='focus'
-                                    position='bottom left'>
-                                    <Popup.Content>
-                                        <DayPicker
-                                            className="Range"
-                                            numberOfMonths={2}
-                                            showWeekNumbers
-                                            fromMonth={sensors.from}
-                                            selectedDays={selectedDays}
-                                            onDayClick={this.handleDayClick}
-                                            onDayMouseEnter={this.handleDayMouseEnter}/>
-                                    </Popup.Content>
-                                </Popup>
-                                <Form.Input
-                                    icon={<Icon name='calendar'
-                                    inverted circular />}
-                                    placeholder='To date' />
-                                </Form.Group>
-                                <Button fluid type='button'>Find</Button>
+                                <ObservableProperties
+                                    layout="dropdown"
+                                    onSelected={applyObsPropFilter}/>
+                                <DateRange
+                                    onRangeSelected={updateDateRange}/>
+                                <Button fluid
+                                    onClick={(e)=>{
+                                        fetch_sensors(sensors.filter)
+                                    }}>Search</Button>
                             </Form>
                         </Segment>
                         </Grid.Column>
@@ -125,26 +64,111 @@ class SensorsComponent extends Component {
                         {
                             sensors.isFetching ?
                             <div>Loading...</div>:
-                            sensors.data.map((sensor, key) => (
-                                <Card fluid
-                                    key={'sns-row-'+sensor.id}>
-                                    <Card.Content>
-                                    <Card.Header>
-                                    {sensor.offering}
-                                    </Card.Header>
-                                    <Card.Meta>
-                                    {sensor.sampled_foi}
-                                    </Card.Meta>
-                                    <Card.Description>
-                                    Steve wants to add you to the group <strong>best friends</strong>
-                                    </Card.Description>
-                                    </Card.Content>
-                                </Card>
-                            ))
+                            <div>
+                                <Header sub attached='top'>
+                                    {
+                                        sensorsCnt === 0?
+                                        "Sensors not found":
+                                        sensorsCnt === 1?
+                                            "1 sensor found":
+                                            sensorsCnt + " sensors found"
+                                    }
+                                </Header>
+                                <Segment attached>
+
+                                {/*<Grid divided='vertically'>*/}
+                                {sensors.data.map((sensor, key) => (
+                                    <div key={'sns-row-'+sensor.id}>
+                                        <div style={{
+                                                fontSize: '1.5em',
+                                                fontWeight: 'bold',
+                                                textTrasform: 'uppercase',
+                                                marginBottom: '0.8em'
+                                            }}>
+                                            <Rating /> {sensor.name}
+                                        </div>
+                                        <div style={{
+                                                marginBottom: '0.8em'
+                                            }}>
+                                            {sensor.sampled_foi}
+                                        </div>
+                                        <Table celled size="small">
+                                            <Table.Header>
+                                                <Table.Row>
+                                                    <Table.HeaderCell>
+                                                        Observed property
+                                                    </Table.HeaderCell>
+                                                    <Table.HeaderCell>
+                                                        Unit of measure
+                                                    </Table.HeaderCell>
+                                                </Table.Row>
+                                            </Table.Header>
+                                            <Table.Body>
+                                            {sensor.observable_properties.map((op, key) => (
+                                                <Table.Row key={"sns-row-op-"+op.id}>
+                                                    <Table.Cell>
+                                                        {op.name}
+                                                    </Table.Cell>
+                                                    <Table.Cell>
+                                                        {op.uom}
+                                                    </Table.Cell>
+                                                </Table.Row>
+                                            ))}
+                                            </Table.Body>
+                                        </Table>
+                                        <Divider/>
+                                    </div>
+                                    /*<Grid.Row columns={2} key={'sns-row-'+sensor.id}>
+                                        <Grid.Column>
+                                            <div style={{
+                                                    fontSize: '1.2em',
+                                                    fontWeight: 'bold',
+                                                    marginBottom: '0.8em'
+                                                }}>
+                                                <Rating /> {sensor.name}
+                                            </div>
+                                            <div style={{
+                                                    marginBottom: '0.8em'
+                                                }}>
+                                                {sensor.sampled_foi}
+                                            </div>
+                                        </Grid.Column>
+                                        <Grid.Column>
+                                            <Table celled>
+                                                <Table.Header>
+                                                    <Table.Row>
+                                                        <Table.HeaderCell>
+                                                            Observed property
+                                                        </Table.HeaderCell>
+                                                        <Table.HeaderCell>
+                                                            Unit of measure
+                                                        </Table.HeaderCell>
+                                                    </Table.Row>
+                                                </Table.Header>
+                                                <Table.Body>
+                                                {sensor.observable_properties.map((op, key) => (
+                                                    <Table.Row key={"sns-row-op-"+op.id}>
+                                                        <Table.Cell>
+                                                            {op.name}
+                                                        </Table.Cell>
+                                                        <Table.Cell>
+                                                            {op.uom}
+                                                        </Table.Cell>
+                                                    </Table.Row>
+                                                ))}
+                                                </Table.Body>
+                                            </Table>
+                                        </Grid.Column>
+                                    </Grid.Row>*/
+                                ))}
+                                {/*</Grid>*/}
+                                </Segment>
+
+                            </div>
                         }
                         </Grid.Column>
                         <Grid.Column width={6}>
-                            map
+                            <FoisMap style={{height: '50%'}}/>
                         </Grid.Column>
                     </Grid>
                 </div>

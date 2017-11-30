@@ -2,9 +2,11 @@
 const initialState = {
     isFetching: false,
     data: [],
-    obsprop: [],
-    from: null,
-    to: null,
+    filter: {
+        observableProperties: [],
+        from: undefined,
+        to: undefined
+    },
     enteredTo: null
 };
 
@@ -28,20 +30,29 @@ const sensors = (state = initialState, action) => {
         case 'APPLY_OBSP_PROP_FILTER':
             return {
                 ...state,
-                obsprop: action.obsprop
+                filter: {
+                    ...state.filter,
+                    observedProperties: action.observedProperties
+                }
             };
 
         case 'UPDATE_OBSP_PROP_DATE_RANGE':
             return {
                 ...state,
-                ...action.data
+                filter: {
+                    ...state.filter,
+                    ...action.data
+                }
             };
 
         case 'RESET_OBSP_PROP_DATE_RANGE':
             return {
                 ...state,
-                from: null,
-                to: null
+                filter: {
+                    ...state.filter,
+                    from: undefined,
+                    to: undefined
+                }
             };
 
         default:
