@@ -47,7 +47,7 @@ class SensorsListComponent extends Component {
                                         sensorSelected(sensor);
                                     }}>
                                     <Table.Cell>
-                                        {sensor.offering}
+                                        {sensor.name}
                                     </Table.Cell>
                                     <Table.Cell>
                                         {sensor.sampled_foi}

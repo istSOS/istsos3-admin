@@ -32,7 +32,8 @@ class HumansDropdown extends Component {
         const {
             humans,
             openDialog,
-            value
+            value,
+            label
         } = this.props;
         var options = humans.data.map((human) => {
             return {
@@ -62,7 +63,9 @@ class HumansDropdown extends Component {
                           openDialog(false)
                       }}>
                       <Modal.Header>
-                          Add a new operator
+                            Add a new {
+                                label !== undefined? label: "person"
+                            }
                       </Modal.Header>
                       <Modal.Content>
                           <Modal.Description>

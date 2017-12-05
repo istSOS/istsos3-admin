@@ -291,6 +291,99 @@ class InsertSensorComponent extends Component {
         }else{
             sampled_foi = fois.selected
         }
+
+        // OPTIONAL METADATA
+        let pd = {};
+        let hasPd = false;
+
+        // General Info
+        if((sensorform.keywords.length
+            + sensorform.alias.length
+            + sensorform.description.length) > 0){
+            pd["general_info"] = {};
+            if (sensorform.keywords.length>0){
+                hasPd = true;
+                pd["general_info"]["keywords"] = sensorform.keywords;
+            }
+            if (sensorform.alias.length>0){
+                hasPd = true;
+                pd["general_info"]["alias"] = sensorform.alias;
+            }
+            if (sensorform.description.length>0){
+                hasPd = true;
+                pd["general_info"]["description"] = sensorform.description;
+            }
+        }
+
+        // Identification
+        if(sensorform.manufacturer != null || (
+                (
+                    sensorform.modelNumber.length
+                    + sensorform.serialNumber.length
+                ) > 0
+            )){
+            pd["identification"] = {};
+            if (sensorform.manufacturer != null){
+                hasPd = true;
+                pd["identification"][
+                    "manufacturer"] = sensorform.manufacturer.username;
+            }
+            if (sensorform.modelNumber.length>0){
+                hasPd = true;
+                pd["identification"][
+                    "model_number"] = sensorform.modelNumber;
+            }
+            if (sensorform.serialNumber.length>0){
+                hasPd = true;
+                pd["identification"][
+                    "serial_number"] = sensorform.serialNumber;
+            }
+        }
+
+        // Capabilities
+        if((sensorform.samplingTimeResolution.length
+            + sensorform.acquisitionTimeResolution.length
+            + sensorform.storageCapacity.length
+            + sensorform.batteryCapacity.length) > 0){
+            pd["capabilities"] = {};
+            if (sensorform.samplingTimeResolution.length>0){
+                hasPd = true;
+                pd["capabilities"][
+                    "sampling_time_resolution"] = sensorform.samplingTimeResolution;
+            }
+            if (sensorform.acquisitionTimeResolution.length>0){
+                hasPd = true;
+                pd["capabilities"][
+                    "acquisition_time_resolution"] = sensorform.acquisitionTimeResolution;
+            }
+            if (sensorform.storageCapacity.length>0){
+                hasPd = true;
+                pd["capabilities"][
+                    "storage_capacity"] = sensorform.storageCapacity;
+            }
+            if (sensorform.batteryCapacity.length>0){
+                hasPd = true;
+                pd["capabilities"][
+                    "battery_capacity"] = sensorform.batteryCapacity;
+            }
+        }
+
+        // Contacts
+        if(sensorform.owner != null ||
+                sensorform.operator != null){
+            pd["contact"] = {};
+            if (sensorform.owner != null){
+                hasPd = true;
+                pd["contact"][
+                    "owner"] = sensorform.owner.username;
+            }
+            if (sensorform.operator != null){
+                hasPd = true;
+                pd["contact"][
+                    "operator"] = sensorform.operator.username;
+            }
+        }
+
         register_sensor({
             "name": sensorform.name,
             "fixed": insertsensor.sensorTypes[
@@ -306,7 +399,12 @@ class InsertSensorComponent extends Component {
                     insertsensor.sensorType
                 ].foiType,
             "sampled_foi": sampled_foi,
-            "config": config
+            "config": config,
+            ...(
+                hasPd? {
+                    "procedure_description": pd
+                }: null
+            )
         });
     }
 

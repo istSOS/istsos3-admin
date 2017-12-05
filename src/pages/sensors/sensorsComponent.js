@@ -10,7 +10,6 @@ import DateRange from '../../common/dateRange';
 
 // Semantic UI components
 import {
-    Card,
     Form,
     Rating,
     //Icon,
@@ -20,8 +19,7 @@ import {
     Segment,
     Header,
     Divider,
-    Table,
-    Statistic
+    Table
 } from 'semantic-ui-react'
 
 // Date picker

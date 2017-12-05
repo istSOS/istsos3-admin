@@ -4,10 +4,12 @@ import { connect } from 'react-redux';
 import {
     setSensorName,
     checkSensorName,
-    setSensorDescription,
     removeObservableProperty,
     addObservableProperty,
-    observedPropertySelected
+    observedPropertySelected,
+    setKeyword,
+    removeKeyword,
+    updateMetadata
 } from './sensorFormAction';
 
 import SensorFormMetadata from './sensorFormMetadata';
@@ -49,9 +51,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         checkSensorName: (text) => {
             dispatch(checkSensorName(text))
         },
-        setSensorDescription: (text) => {
-            dispatch(setSensorDescription(text))
-        },
         addObservableProperty: () => {
             dispatch(addObservableProperty());
         },
@@ -60,6 +59,15 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         observedPropertySelected: (observedProperty) => {
             dispatch(observedPropertySelected(observedProperty))
+        },
+        setKeyword: (keyword) => {
+            dispatch(setKeyword(keyword))
+        },
+        removeKeyword: (index) => {
+            dispatch(removeKeyword(index))
+        },
+        updateMetadata: (key, value) => {
+            dispatch(updateMetadata(key, value))
         }
     }
 };

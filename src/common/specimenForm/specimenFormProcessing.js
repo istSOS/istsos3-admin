@@ -32,7 +32,6 @@ class SpecimenFormProcessing extends Component {
             addProcessingDetails,
             removeProcessingDetails
         } = this.props;
-        console.log(specimenform.valid);
         return (
             <div>
                 <Form widths='equal'>
