@@ -28,6 +28,7 @@ import humans from '../common/humans/humansState';
 import humanform from '../common/humanForm/humanFormState';
 import processingdetails from '../common/processingDetails/processingDetailsState';
 import processingdetailform from '../common/processingDetailForm/processingDetailFormState';
+import featureWizard from '../pages/create/feature/featureStore';
 
 const appState = combineReducers({
     offerings,
@@ -56,7 +57,8 @@ const appState = combineReducers({
     humans,
     humanform,
     processingdetails,
-    processingdetailform
+    processingdetailform,
+    featureWizard
 });
 
 export default appState;

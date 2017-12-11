@@ -2,7 +2,8 @@ import axios from 'axios'
 
 export function fetch(
         fetchingAction,
-        data = undefined
+        data = undefined,
+        onSuccess = undefined
     ){
     return function(dispatch){
         if (data !== undefined){
@@ -14,7 +15,7 @@ export function fetch(
             type: fetchingAction
         });
         return axios({
-            url: '../rest',
+            url: '/rest',
             timeout: 20000,
             method: 'post',
             responseType: 'json',
@@ -24,12 +25,16 @@ export function fetch(
             }
         })
             .then(function(response) {
-                dispatch({
-                    type: fetchingAction + "_OK",
-                    json: response.data,
-                    status: response.status,
-                    message: response.statusText
-                });
+                if(onSuccess!==undefined){
+                    onSuccess(dispatch, response.data);
+                }else{
+                    dispatch({
+                        type: fetchingAction + "_OK",
+                        json: response.data,
+                        status: response.status,
+                        message: response.statusText
+                    });
+                }
             })
             .catch(function (error) {
                 dispatch({

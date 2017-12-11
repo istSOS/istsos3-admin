@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import {
+  Route,
+  withRouter
+} from 'react-router-dom';
 
 
 // istSOS components
@@ -8,6 +12,8 @@ import {
     //Uoms,
     SensorForm,
     SpecimenForm,
+    FoiForm,
+    FoisList,
     setting
 } from '../../../common';
 
@@ -622,6 +628,303 @@ class InsertSensorComponent extends Component {
     render() {
         const {
             //observableproperties,
+            history,
+            specimenform,
+            insertsensor,
+            skipSpecimentPage,
+            sensorform,
+            foiEdit
+        } = this.props;
+        return (
+            <Grid columns='equal'>
+                <Grid.Column width={2}>
+                </Grid.Column>
+                <Grid.Column>
+                    <Route
+                        path='/create/sensor'
+                        exact={true}
+                        render={(routeProps) => (
+                            this.startPage()
+                        )}/>
+                    <Route
+                        path='/create/sensor/specimen'
+                        exact={true}
+                        render={(routeProps) => (
+                            <div>
+                                <Header as='h3'>
+                                    Specimen template
+                                </Header>
+                                <SpecimenForm
+                                    hidden={['time']}/>
+                            </div>
+                        )}/>
+                    <Route
+                        path='/create/sensor/specimen/processing'
+                        exact={true}
+                        render={(routeProps) => (
+                            <div>
+                                <Header as='h3'>
+                                    Specimen template
+                                </Header>
+                                <SpecimenForm
+                                    layout="processing"/>
+                            </div>
+                        )}/>
+                    <Route
+                        path='/create/sensor/metadata'
+                        exact={true}
+                        render={(routeProps) => (
+                            <div>
+                                <Header as='h3'>
+                                    Sensor metadata
+                                </Header>
+                                <SensorForm layout="metadata"/>
+                            </div>
+                        )}/>
+                    <Route
+                        path='/create/sensor/observedproperties'
+                        exact={true}
+                        render={(routeProps) => {
+                            if (insertsensor.observationType === '1'){
+                                return <SensorForm
+                                    single={true}
+                                    layout="observedproperties"/>;
+                            }else{
+                                return <SensorForm
+                                    layout="observedproperties"/>;
+                            }
+                        }}/>
+                    <Route
+                        path='/create/sensor/featureofinterest'
+                        exact={true}
+                        render={(routeProps) => (
+                            <div>
+                                <Header as='h3'>
+                                    Feature of interest
+                                </Header>
+                                <Button.Group>
+                                    <Button
+                                        positive={!insertsensor.newfoi}
+                                        onClick={e => {
+                                            foiEdit(false);
+                                        }}>Select existing</Button>
+                                    <Button.Or />
+                                    <Button
+                                        positive={insertsensor.newfoi}
+                                        onClick={e => {
+                                            foiEdit(true);
+                                        }}>Create new</Button>
+                                </Button.Group>
+                                {
+                                    insertsensor.editing?
+                                    <FoiForm
+                                        hideButton={true}/>:
+                                    <FoisList/>
+                                }
+                            </div>
+                        )}/>
+                </Grid.Column>
+                <Grid.Column width={3}>
+                    <Card>
+                        <Route
+                            path='/create/sensor'
+                            exact={true}
+                            render={() => ([
+                                <Card.Content
+                                    key={'fwcsc-1'}>
+                                    <Card.Header>
+                                        Registering a new sensor
+                                    </Card.Header>
+                                    <Card.Description>
+                                        Please, select the sensor type and
+                                        the data format for this sensor of the
+                                        new sensor.
+                                    </Card.Description>
+                                </Card.Content>,
+                                <Card.Content extra
+                                    key={'fwcsc-2'}>
+                                    <div className='ui two buttons'>
+                                        <Button
+                                            primary={(
+                                                    insertsensor.sensorType !== null &&
+                                                    insertsensor.observationType !== null)}
+                                            disabled={!(
+                                                    insertsensor.sensorType !== null &&
+                                                    insertsensor.observationType !== null)}
+                                            content='Continue'
+                                            onClick={(e) => {
+                                                if (insertsensor.sensorType === '3'){
+                                                    history.push(
+                                                        '/create/sensor/specimen'
+                                                    );
+                                                }else{
+                                                    history.push(
+                                                        '/create/sensor/metadata'
+                                                    );
+                                                }
+                                            }}/>
+                                    </div>
+                                </Card.Content>
+                            ])}/>
+                            <Route
+                                path='/create/sensor/specimen'
+                                exact={true}
+                                render={() => ([
+                                    <Card.Content
+                                        key={'fwcsc-1'}>
+                                        <Card.Header>
+                                            Registering a new sensor
+                                        </Card.Header>
+                                        <Card.Description>
+                                            Each time a new speciment will be
+                                            collected this is the date that will
+                                            be filled by default.
+                                        </Card.Description>
+                                    </Card.Content>,
+                                    <Card.Content extra
+                                        key={'fwcsc-2'}>
+                                        <div>
+                                            <Button
+                                                primary={specimenform.valid}
+                                                disabled={!specimenform.valid}
+                                                fluid
+                                                content='Continue'
+                                                onClick={(e)=>(
+                                                    history.push(
+                                                        '/create/sensor/specimen/processing'
+                                                    )
+                                                )}/>
+                                            <Divider horizontal>Or</Divider>
+                                            <Button
+                                                primary={!specimenform.valid}
+                                                secondary={specimenform.valid}
+                                                fluid
+                                                content='Skip'
+                                                onClick={(e)=>{
+                                                    skipSpecimentPage();
+                                                    history.push(
+                                                        '/create/sensor/metadata'
+                                                    )
+                                                }}/>
+                                        </div>
+                                    </Card.Content>
+                                ])}/>
+                                <Route
+                                    path='/create/sensor/specimen/processing'
+                                    exact={true}
+                                    render={() => ([
+                                        <Card.Content
+                                            key={'fwcsc-1'}>
+                                            <Card.Header>
+                                                Registering a new sensor
+                                            </Card.Header>
+                                            <Card.Description>
+                                                Each time a new speciment will be
+                                                collected this is the date that will
+                                                be filled by default.
+                                            </Card.Description>
+                                        </Card.Content>,
+                                        <Card.Content extra
+                                            key={'fwcsc-2'}>
+                                            <div className='ui two buttons'>
+                                                <Button
+                                                    fluid
+                                                    content='Continue'
+                                                    onClick={(e)=>(
+                                                        history.push(
+                                                            '/create/sensor/metadata'
+                                                        )
+                                                    )}/>
+                                            </div>
+                                        </Card.Content>
+                                    ])}/>
+                                <Route
+                                    path='/create/sensor/metadata'
+                                    exact={true}
+                                    render={() => ([
+                                        <Card.Content
+                                            key={'fwcsc-1'}>
+                                            <Card.Header>
+                                                Registering a new sensor
+                                            </Card.Header>
+                                            <Card.Description>
+                                                Each time a new speciment will be
+                                                collected this is the date that will
+                                                be filled by default.
+                                            </Card.Description>
+                                        </Card.Content>,
+                                        <Card.Content extra
+                                            key={'fwcsc-2'}>
+                                            <div className='ui two buttons'>
+                                                <Button
+                                                    primary={sensorform.valid}
+                                                    disabled={!sensorform.valid}
+                                                    fluid
+                                                    content='Continue'
+                                                    onClick={(e)=>(
+                                                        history.push(
+                                                            '/create/sensor/observedproperties'
+                                                        )
+                                                    )}/>
+                                            </div>
+                                        </Card.Content>
+                                    ])}/>
+                                <Route
+                                    path='/create/sensor/observedproperties'
+                                    exact={true}
+                                    render={() => ([
+                                        <Card.Content
+                                            key={'fwcsc-1'}>
+                                            <Card.Header>
+                                                Registering a new sensor
+                                            </Card.Header>
+                                            <Card.Description>
+                                                Each time a new speciment will be
+                                                collected this is the date that will
+                                                be filled by default.
+                                            </Card.Description>
+                                        </Card.Content>,
+                                        <Card.Content extra
+                                            key={'fwcsc-2'}>
+                                            <div className='ui two buttons'>
+                                                <Button
+                                                    primary={(
+                                                        (
+                                                            insertsensor.observationType === '1'
+                                                            && sensorform.observableProperties.length === 1
+                                                        ) || (
+                                                            insertsensor.observationType === '2'
+                                                            && sensorform.observableProperties.length > 1
+                                                        )
+                                                    )}
+                                                    disabled={!(
+                                                        (
+                                                            insertsensor.observationType === '1'
+                                                            && sensorform.observableProperties.length === 1
+                                                        ) || (
+                                                            insertsensor.observationType === '2'
+                                                            && sensorform.observableProperties.length > 1
+                                                        )
+                                                    )}
+                                                    fluid
+                                                    content='Continue'
+                                                    onClick={(e)=>(
+                                                        history.push(
+                                                            '/create/sensor/featureofinterest'
+                                                        )
+                                                    )}/>
+                                            </div>
+                                        </Card.Content>
+                                    ])}/>
+                    </Card>
+                </Grid.Column>
+            </Grid>
+        )
+    }
+
+    render2() {
+        const {
+            //observableproperties,
             insertsensor
         } = this.props;
         return (
@@ -669,4 +972,4 @@ class InsertSensorComponent extends Component {
     }
 };
 
-export default InsertSensorComponent;
+export default withRouter(InsertSensorComponent);

@@ -83,9 +83,8 @@ const isValid = (state) => {
     if(state.identifierValid === false){
         return false;
     }
-    /*if(state.hidden.indexOf('time') === -1
-            && state.samplingTimeValid === false){*/
-    if(state.samplingTimeValid === false){
+    if(state.hidden.indexOf('time') === -1
+            && state.samplingTimeValid === false){
         return false;
     }
     return true;

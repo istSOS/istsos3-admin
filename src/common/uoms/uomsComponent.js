@@ -62,28 +62,28 @@ class UomsComponent extends Component {
                     }
                     onChange={this.handleChange}/>
                 {
-                  uoms.dialog===true?
-                  <Modal
-                      open={uoms.dialog}
-                      onClose={(e) => {
-                          openDialog(false)
-                      }}>
-                      <Modal.Header>
-                          Add a new unit of measure
-                      </Modal.Header>
-                      <Modal.Content>
-                          <Modal.Description>
-                              <UomForm/>
-                          </Modal.Description>
-                      </Modal.Content>
-                  </Modal>:
-                  <Button
-                      circular
-                      secondary
-                      icon='add'
-                      onClick={(e) => {
-                          openDialog(true)
-                      }}/>
+                    uoms.dialog===true?
+                    <Modal
+                        open={uoms.dialog}
+                        onClose={(e) => {
+                            openDialog(false)
+                        }}>
+                        <Modal.Header>
+                          §Add a new unit of measure
+                        </Modal.Header>
+                        <Modal.Content>
+                            <Modal.Description>
+                                <UomForm/>
+                            </Modal.Description>
+                        </Modal.Content>
+                    </Modal>:
+                    <Button
+                        circular
+                        secondary
+                        icon='add'
+                        onClick={(e) => {
+                            openDialog(true)
+                        }}/>
                 }
           </Form.Group>
         )

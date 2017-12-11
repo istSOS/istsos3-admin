@@ -10,3 +10,12 @@ body {
     background-color: #717171;
     border-radius: 0%;
 }
+
+.centerCtr {
+    top: 50%;
+    left: 50%;
+    width: 1em;
+    height: 1em;
+    background-color: red;
+    border-radius: 50%;
+}

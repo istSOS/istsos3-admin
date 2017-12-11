@@ -18,12 +18,14 @@ import GeoJSON from 'ol/format/geojson';
 import Draw from 'ol/interaction/draw';
 import Modify from 'ol/interaction/modify';
 
-//import Feature from 'ol/feature';
-//import Point from 'ol/geom/point';
+import Feature from 'ol/feature';
+import Point from 'ol/geom/point';
 import Style from 'ol/style/style';
 import Icon from 'ol/style/icon';
 import Text from 'ol/style/text';
 import Fill from 'ol/style/fill';
+
+//import Control from 'ol/control/control';
 
 // Semantic UI components
 import { Menu } from 'semantic-ui-react';
@@ -31,6 +33,10 @@ import { Menu } from 'semantic-ui-react';
 class FoisMapComponent extends Component {
 
     componentDidMount() {
+        const {
+            edit
+        } = this.props;
+
         this.map = new Map({
             target: 'map-container',
             layers: [
@@ -45,6 +51,8 @@ class FoisMapComponent extends Component {
                 zoom: 2
             })
         });
+
+        // Editing layer
         this.position = new VectorSource();
         const vector = new VectorLayer({
             source: this.position,
@@ -56,6 +64,30 @@ class FoisMapComponent extends Component {
             })
         });
         this.map.addLayer(vector);
+
+        /*
+        this.map.on("pointerdrag", function(e) {
+            console.log(e);
+            this.centerFeature.getGeometry().setCoordinates(
+                this.map.getView().getCenter()
+            );
+            this.position.changed();
+        }, this);
+
+        this.map.getView().on('change:center', function(e){
+            this.centerFeature.getGeometry().setCoordinates(
+                this.map.getView().getCenter()
+            )
+        }, this);
+
+        var element = document.createElement('div');
+        element.className = 'centerCtr ol-unselectable ol-control';
+        this.centerCtr = new Control({
+            element: element
+        });
+        this.map.addControl(this.centerCtr);
+        */
+
 
         // Feature of interest layer
         this.fois = new VectorSource();
@@ -91,6 +123,21 @@ class FoisMapComponent extends Component {
 
         this.position.on('addfeature', this.geomAdded, this);
         this.position.on('changefeature', this.geomChanged, this);
+
+        if(edit){
+            if(edit.type==='Point'){
+                this.centerFeature = new Feature({
+                    name: "Center",
+                    geometry: new Point(
+                        this.map.getView().getCenter()
+                    )
+                });
+                this.position.addFeature(
+                    this.centerFeature
+                );
+            }
+            this.map.addInteraction(this.modify);
+        }
     }
 
     componentWillUpdate(nextProps, nextState){
@@ -99,18 +146,19 @@ class FoisMapComponent extends Component {
             edit
         } = nextProps;
 
-        if(edit !== undefined){
+        if(edit){
 
             this.position.un('changefeature', this.geomChanged, this);
-            let fois = this.position.getFeatures();
+            this.centerFeature.getGeometry().setCoordinates(
+                edit.coordinates
+            );
+            /*let fois = this.position.getFeatures();
             if(fois.length>0){
                 // Already on map, just change coordinates
                 fois[0].getGeometry().setCoordinates([
-                    edit.point.x,
-                    edit.point.y
+                    edit.coordinates
                 ]);
-            }
-
+            }*/
             this.position.on('changefeature', this.geomChanged, this);
         }
 
@@ -244,9 +292,9 @@ class FoisMapComponent extends Component {
                     width: '100%',
                     border: 'thin solid #cccccc'
                 }}>
-                <Menu secondary style={{margin: '0px'}}>
+                {/*<Menu secondary style={{margin: '0px'}}>
                     {this.getToolbar()}
-                </Menu>
+                </Menu>*/}
                 <div className="container-fluid" id='map-container' style={{
                     padding: '0px',
                     height: '500px'

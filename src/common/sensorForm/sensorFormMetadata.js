@@ -210,28 +210,28 @@ class SensorFormMetadata extends Component {
                 <p>
                     Capability list for quick discovery
                 </p>
-                <Form.Field>
+                <Form.Field
+                    error={!sensorform.samplingTimeResolutionValid}>
                     <label>
                         Sampling time resolution
                         (ISO 8601 time intervals)
                     </label>
                     <Input
                         id="sf-samplingTimeResolution"
-                        error={true}
                         placeholder='What is the frequency?'
                         onChange={
                             this.handleChange.bind(this)
                         }
                         value={sensorform.samplingTimeResolution}/>
                 </Form.Field>
-                <Form.Field>
+                <Form.Field
+                    error={!sensorform.acquisitionTimeResolutionValid}>
                     <label>
                         Acquisition time resolution
                         (ISO 8601 time intervals)
                     </label>
                     <Input
                         id="sf-acquisitionTimeResolution"
-                        error={!sensorform.acquisitionTimeResolutionValid}
                         placeholder='How often are the data sent?'
                         onChange={
                             this.handleChange.bind(this)

@@ -32,7 +32,15 @@ class FoiForm extends Component {
 const mapStateToProps = (state, ownProps) => {
     return {
         foiform: state.foiform,
-        ...ownProps
+        ...ownProps,
+        hide: {
+            name: false,
+            identifier: false,
+            description: false,
+            type: false,
+            coordinates: false,
+            ...ownProps.hide
+        }
     };
 };
 
@@ -43,7 +51,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             dispatch(create_foi(foi));
         },
         foiSamplingSelected: (samplingType) => {
-            dispatch(foiSamplingSelected(samplingType.definition));
+            dispatch(foiSamplingSelected(samplingType));
         },
         foiNameChanged: (name) => {
             dispatch(foiNameChanged(name));

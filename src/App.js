@@ -12,7 +12,8 @@ import {
 
 import Header from './pages/header/headerContainer';
 import HomeComponent from './pages/home/homeComponent';
-import {default as FoisCreator} from './pages/create/fois/foisContainer';
+//import {default as FoisCreator} from './pages/create/fois/foisContainer';
+import FeatureWizard from './pages/create/feature/featureContainer';
 import Sensors from './pages/sensors/sensorsContainer';
 
 // Viewer
@@ -49,7 +50,8 @@ const routes = [
     {
         path: '/create/featureofinterest',
         sidebar: () => <div>shoelaces!</div>,
-        body: FoisCreator
+        body: FeatureWizard,
+        //body: FoisCreator
     },
     {
         path: '/create/specimen',

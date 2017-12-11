@@ -96,10 +96,10 @@ export const foiDescriptionChanged = (description) => {
     }
 }
 
-export const foiSamplingSelected = (definition) => {
+export const foiSamplingSelected = (samplingType) => {
     return {
         type: 'FOI_SAMPLING_SELECTED',
-        definition: definition
+        samplingType: samplingType
     }
 }
 

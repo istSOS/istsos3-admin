@@ -53,8 +53,9 @@ class ObservablePropertiesComponent extends Component {
                     fluid={true}
                     options={options}
                     placeholder='Select an observable property..'
-                    onChange={this.handleChange}/>,
-                observableproperties.dialog===true?
+                    onChange={this.handleChange}/>
+                {
+                    observableproperties.dialog===true?
                     <Modal
                         key="opc-md"
                         open={observableproperties.dialog}
@@ -77,7 +78,7 @@ class ObservablePropertiesComponent extends Component {
                         onClick={(e) => {
                             openDialog(true)
                         }}/>
-                        
+                }
             </Form.Group>
         )
     }

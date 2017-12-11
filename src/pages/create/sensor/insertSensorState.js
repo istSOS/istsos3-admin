@@ -4,6 +4,7 @@ const initialState = {
     wizardPage: 1,
     isFetching: false,
     skipSpecimen: false,
+    newfoi: false,
 
     // Initial config selection
     sensorType: null,
@@ -93,7 +94,7 @@ const insertsensor = (state = initialState, action) => {
         case 'SKIP_SPECIMEN_WIZARD_PAGE':
             return {
                 ...state,
-                wizardPage: (state.wizardPage + 2),
+                //wizardPage: (state.wizardPage + 2),
                 skipSpecimen: true
             };
 

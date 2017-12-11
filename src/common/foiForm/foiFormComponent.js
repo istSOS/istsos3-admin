@@ -127,81 +127,99 @@ class FoiFormComponent extends Component {
         const {
             create_foi,
             foiSamplingSelected,
-            foiform
+            foiform,
+            hide
         } = this.props;
         let hideButton = false;
         if(this.props.hideButton===true){
             hideButton = true;
         }
         return (
-            <Form style={{
-                    marginLeft: '1rem'
-                }}>
-                <Form.Field>
-                    <label
-                        color={color}
-                        pointing='below'>Name *</label>
-                    <Input
-                        id="foiFormName"
-                        iconPosition='left'
-                        icon={
-                            foiform.nameValidated === true && foiform.nameValid === true?
-                            'check': 'delete'
-                        }
-                        loading={foiform.validatingName}
-                        placeholder='Label this feature of interest..'
-                        onChange={
-                            this.handleChange.bind(this)
-                        }
-                        value={foiform.name}/>
-                </Form.Field>
-                <Form.Field>
-                    <label
-                        color={color}
-                        pointing='below'>Identifier *</label>
-                    <Input
-                        id="foiFormIdentifier"
-                        iconPosition='left'
-                        icon={
-                            foiform.identifierValidated === true && foiform.identifierValid === true?
-                            'check': 'delete'
-                        }
-                        loading={foiform.validatingIdentifier}
-                        placeholder='Assigns a unique identifier..'
-                        onChange={
-                            this.handleChange.bind(this)
-                        }
-                        value={foiform.identifier}/>
-                </Form.Field>
-                <Form.Field>
-                    <label
-                        color={color}
-                        pointing='below'>
-                        Description
-                    </label>
-                    <TextArea
-                        id="foiFormDescription"
-                        rows="3"
-                        placeholder="Add a description"
-                        onChange={
-                            this.handleChange.bind(this)
-                        }
-                        value={foiform.description}/>
-                </Form.Field>
+            <Form>
+                {
+                    !hide.name?
+                    <Form.Field required>
+                        <label
+                            color={color}
+                            pointing='below'>Name</label>
+                        <Input
+                            id="foiFormName"
+                            iconPosition='left'
+                            icon={
+                                foiform.nameValidated === true && foiform.nameValid === true?
+                                'check': 'delete'
+                            }
+                            loading={foiform.validatingName}
+                            placeholder='Label this feature of interest..'
+                            onChange={
+                                this.handleChange.bind(this)
+                            }
+                            value={foiform.name}
+                            autoComplete="off"
+                            autoCorrect="off"
+                            autoCapitalize="off"
+                            spellCheck="false"/>
+                    </Form.Field>: null
+                }
+                {
+                    !hide.identifier?
+                    <Form.Field required>
+                        <label
+                            color={color}
+                            pointing='below'>Identifier</label>
+                        <Input
+                            id="foiFormIdentifier"
+                            iconPosition='left'
+                            icon={
+                                foiform.identifierValidated === true && foiform.identifierValid === true?
+                                'check': 'delete'
+                            }
+                            loading={foiform.validatingIdentifier}
+                            placeholder='Assigns a unique identifier..'
+                            onChange={
+                                this.handleChange.bind(this)
+                            }
+                            value={foiform.identifier}
+                            autoComplete="off"
+                            autoCorrect="off"
+                            autoCapitalize="off"
+                            spellCheck="false"/>
+                    </Form.Field>: null
+                }
+                {
+                    !hide.description?
+                    <Form.Field>
+                        <label
+                            color={color}
+                            pointing='below'>
+                            Description
+                        </label>
+                        <TextArea
+                            id="foiFormDescription"
+                            rows="3"
+                            placeholder="Add a description"
+                            onChange={
+                                this.handleChange.bind(this)
+                            }
+                            value={foiform.description}/>
+                    </Form.Field>: null
+                }
+                {
+                    !hide.type?
+                    <Form.Field required>
+                        <label
+                            color={color}
+                            pointing='below'>
+                            Sampling Type
+                        </label>
+                        <SamplingTypes
+                            onSelected = {foiSamplingSelected}
+                            value = {foiform.type}
+                            disabled = {foiform.typeForced}/>
+                    </Form.Field>: null
+                }
 
-                <Form.Field>
-                    <label
-                        color={color}
-                        pointing='below'>
-                        Sampling Type
-                    </label>
-                    <SamplingTypes
-                        onSelected = {foiSamplingSelected}
-                        value = {foiform.type}
-                        disabled = {foiform.typeForced}/>
-                </Form.Field>
-
-                {this.getGeoField()}
+                {!hide.coordinates? this.getGeoField(): null}
 
                 {
                     hideButton?

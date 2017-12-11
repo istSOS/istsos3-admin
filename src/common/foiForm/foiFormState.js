@@ -1,6 +1,8 @@
+import {setting} from '../../common';
 
 const initialState = {
     isFetching: false,
+    validMeta: false,
     valid: false,
 
     // Name server side validation
@@ -18,12 +20,14 @@ const initialState = {
     name: "",
     type: undefined,
     typeForced: false,
-    geom: {},
+
     point: {
         x: 0,
         y: 0,
         z: 0
-    }
+    },
+
+    shape: null
 };
 
 const validate = (state) => {
@@ -44,10 +48,27 @@ const foiform = (state = initialState, action) => {
 
     switch (action.type) {
 
+        case 'FOI_FORM_RESET':
+            return {
+                ...initialState
+            };
+
         case 'FOI_SAMPLING_SELECTED':
+            let coordinates = [];
+            switch (action.definition) {
+                case setting._SAMPLING_POINT:
+                    coordinates = [0,0];
+                    break;
+                default:
+            }
+
             return validate({
                 ...state,
-                type: action.definition
+                type: action.samplingType.definition,
+                shape: {
+                    type: action.samplingType.name,
+                    coordinates: coordinates
+                }
             });
 
         case 'FOI_SAMPLING_FORCED':
@@ -115,6 +136,14 @@ const foiform = (state = initialState, action) => {
                 point: {
                     ...state.point,
                     x: action.x
+                },
+                shape: {
+                    ...state.shape,
+                    coordinates: [
+                        action.x !== ''?
+                            parseFloat(action.x): 0,
+                        state.shape.coordinates[1]
+                    ]
                 }
             };
 
@@ -124,6 +153,14 @@ const foiform = (state = initialState, action) => {
                 point: {
                     ...state.point,
                     y: action.y
+                },
+                shape: {
+                    ...state.shape,
+                    coordinates: [
+                        state.shape.coordinates[0],
+                        action.y !== ''?
+                            parseFloat(action.y): 0
+                    ]
                 }
             };
 
@@ -137,31 +174,41 @@ const foiform = (state = initialState, action) => {
             };
 
         case 'FOI_GEOMETRY_ADDED':
-            if(action.geom_type==='Point'){
-                return {
-                    ...state,
-                    point: {
-                        x: action.geom[0],
-                        y: action.geom[1],
-                        z: state.point.z
-                    }
-                };
-            }else{
-                return state;
+            switch (action.geom_type) {
+                case setting._SAMPLING_POINT:
+                    return {
+                        ...state,
+                        point: {
+                            x: action.geom[0],
+                            y: action.geom[1],
+                            z: state.point.z
+                        },
+                        shape: {
+                            ...state.shape,
+                            coordinates: action.geom
+                        }
+                    };
+                default:
+                    return state;
             }
 
         case 'FOI_GEOMETRY_CHANGED':
-            if(action.geom_type==='Point'){
-                return {
-                    ...state,
-                    point: {
-                        x: action.geom[0],
-                        y: action.geom[1],
-                        z: state.point.z
-                    }
-                };
-            }else{
-                return state;
+            switch (action.geom_type) {
+                case 'Point':
+                    return {
+                        ...state,
+                        point: {
+                            x: action.geom[0],
+                            y: action.geom[1],
+                            z: state.point.z
+                        },
+                        shape: {
+                            ...state.shape,
+                            coordinates: action.geom
+                        }
+                    };
+                default:
+                    return state;
             }
 
         default:
