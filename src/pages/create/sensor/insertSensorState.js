@@ -132,6 +132,12 @@ const insertsensor = (state = initialState, action) => {
                 ].foiType === setting._SAMPLING_SPECIMEN? 2: 3*/
             };
 
+        case 'TOGGLE_FOI_EDIT':
+            return {
+                ...state,
+                newfoi: action.status
+            };
+
         case 'SELECT_OBSERVATION_TYPE':
             return {
                 ...state,

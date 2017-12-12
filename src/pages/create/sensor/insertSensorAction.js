@@ -27,6 +27,13 @@ export const toggleResultType = (id) => {
     }
 }
 
+export const toggleFoiEdit = (status) => {
+    return {
+        type: 'TOGGLE_FOI_EDIT',
+        status: status
+    }
+}
+
 export const setWizardPage = (page) => {
     return {
         type: 'SET_INS_SENS_WIZARD_PAGE',

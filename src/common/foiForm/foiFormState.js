@@ -75,7 +75,11 @@ const foiform = (state = initialState, action) => {
             return {
                 ...state,
                 type: action.samplingType,
-                typeForced: true
+                typeForced: true,
+                shape: {
+                    type: 'Point',
+                    coordinates: [0,0]
+                }
             };
 
         case 'FOI_NAME_CHANGED':

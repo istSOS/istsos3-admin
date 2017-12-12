@@ -16,7 +16,8 @@ import {
     prevWizardPage,
     register_sensor,
     geometryAdded,
-    skipSpecimentPage
+    skipSpecimentPage,
+    toggleFoiEdit
 } from './insertSensorAction';
 
 import InsertSensorComponent from './insertSensorComponent';
@@ -51,6 +52,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
                     sensorTypes.id
                 )
             );
+            debugger;
+            console.log("ciao");
             // Configure the foi form
             dispatch(
                 foiSamplingForced(sensorTypes.foiType)
@@ -79,6 +82,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         register_sensor: (insertsensor) => {
             dispatch(register_sensor(insertsensor));
+        },
+        toggleFoiEdit: (status) => {
+            dispatch(toggleFoiEdit(status));
         }
     }
 };
