@@ -18,12 +18,12 @@ import {
     setting
 } from '../../../common';
 
-import Fois from '../fois/foisContainer';
+//import Fois from '../fois/foisContainer';
 
 // Semantic UI components
 import {
     Grid,
-    Container,
+    //Container,
     //Form,
     Card,
     //Input,
@@ -32,7 +32,7 @@ import {
     Image,
     Header,
     Divider,
-    List
+    //List
 } from 'semantic-ui-react';
 
 class InsertSensorComponent extends Component {
@@ -156,9 +156,11 @@ class InsertSensorComponent extends Component {
             sensorform,
             specimenform,
             fois,
-            foisstate,
+            //foisstate,
             foiform
         } = this.props;
+
+        debugger;
 
         let observable_property = [],
             observation_type = [],
@@ -189,7 +191,7 @@ class InsertSensorComponent extends Component {
         }
         // Check if FOI is new of an existing is selected
         let sampled_foi;
-        if (foisstate.editing === true){
+        if (insertsensor.newfoi === true){
             sampled_foi = foiform2entity(foiform)
         }else{
             sampled_foi = fois.selected
@@ -296,7 +298,7 @@ class InsertSensorComponent extends Component {
             "procedure_description_format": [
                 "http://www.opengis.net/sensorML/1.0.1"
             ],
-            "observable_property": observable_property,
+            "observable_properties": observable_property,
             "observation_types": observation_type,
             "foi_type": insertsensor.sensorTypes[
                     insertsensor.sensorType
@@ -669,6 +671,7 @@ class InsertSensorComponent extends Component {
                                                     history.push(
                                                         '/create/sensor/checkout'
                                                     )
+                                                    this.finish();
                                                 }
                                             }}/>
                                     </div>

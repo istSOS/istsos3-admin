@@ -2,6 +2,8 @@
 const initialState = {
     isFetching: false,
     data: [],
+    selected: [],
+    selectedIds: [],
     filter: {
         observableProperties: [],
         from: undefined,
@@ -11,8 +13,8 @@ const initialState = {
 };
 
 const sensors = (state = initialState, action) => {
+    let copy;
 
-    //let copy;
     switch (action.type) {
 
         case 'FETCH_SENSORS':
@@ -54,6 +56,22 @@ const sensors = (state = initialState, action) => {
                     to: undefined
                 }
             };
+
+        case 'SENSORS_ADD_OFFERING':
+            copy = {
+                ...state
+            }
+            copy.selected.push(action.offering);
+            copy.selectedIds.push(action.offering.id);
+            return copy;
+
+        case 'SENSORS_REMOVE_OFFERING':
+            copy = {
+                ...state
+            }
+            copy.selected.splice(action.index, 1);
+            copy.selectedIds.splice(action.index, 1);
+            return copy;
 
         default:
             return state;

@@ -29,3 +29,17 @@ export const resetDateRange = () => {
         type: 'RESET_OBSP_PROP_DATE_RANGE'
     }
 };
+
+export const addOffering = (offering) => {
+    return {
+        type: 'SENSORS_ADD_OFFERING',
+        offering: offering
+    }
+};
+
+export const removeOffering = (index) => {
+    return {
+        type: 'SENSORS_REMOVE_OFFERING',
+        index: index
+    }
+};

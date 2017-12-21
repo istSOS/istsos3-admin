@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import DayPicker, { DateUtils } from 'react-day-picker';
 import moment from 'moment';
+import 'react-day-picker/lib/style.css';
 
 // Semantic UI components
 import {
@@ -9,10 +10,7 @@ import {
     Popup
 } from 'semantic-ui-react';
 
-class DateRange extends Component {
-    static defaultProps = {
-        numberOfMonths: 2,
-    };
+class DateRange extends React.Component {
     constructor(props) {
         super(props);
         this.handleDayClick = this.handleDayClick.bind(this);

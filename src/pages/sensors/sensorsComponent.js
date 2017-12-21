@@ -5,8 +5,12 @@ import {
     ObservableProperties
 } from '../../common';
 import FoisMap from '../../common/foisMap/foisMapContainer';
+import SensorsBasket from './sensorsBasket';
+import SensorsSearchResult from './sensorsSearchResult';
 
 import DateRange from '../../common/dateRange';
+
+import {TestPlugin} from 'istsos3-viewer';
 
 // Semantic UI components
 import {
@@ -34,15 +38,77 @@ class SensorsComponent extends Component {
             sensors,
             applyObsPropFilter,
             updateDateRange,
-            fetch_sensors
+            fetch_sensors,
+            addOffering,
+            removeOffering
         } = this.props;
         let sensorsCnt = Object.keys(sensors.data).length;
-        return (
+        return(
+            <div style={{
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    overflow: 'hidden',
+                    padding: '1px'
+                }}>
+                <div style={{
+                        padding: '1px 1rem'
+                    }}>
+                        <Button circular secondary icon='find' />
+                        <br/>
+                        <br/>
+                        <Button circular secondary icon='area chart' />
+                        <br/>
+                        <br/>
+                        <Button circular secondary icon='map' />
+                </div>
+                <div style={{
+                        padding: '1px'
+                    }}>
+                    <Header sub attached='top'>
+                        Search
+                    </Header>
+                    <Segment attached>
+                        <Form>
+                            <ObservableProperties
+                                layout="dropdown"
+                                onSelected={applyObsPropFilter}/>
+                            <DateRange
+                                onRangeSelected={updateDateRange}/>
+                            <Button fluid
+                                onClick={(e)=>{
+                                    fetch_sensors(sensors.filter)
+                                }}>Search</Button>
+                        </Form>
+                    </Segment>
+                    <TestPlugin/>
+                    <SensorsBasket
+                        sensors={sensors}
+                        removeOffering={removeOffering}/>
+                </div>
+                <div style={{
+                        flex: 1,
+                        padding: '1px 1rem'
+                    }}>
+                    <SensorsSearchResult
+                        sensors={sensors}
+                        addOffering={addOffering}/>
+                </div>
+                <div style={{
+                        flex: 1,
+                        padding: '0px'
+                    }}>
+                    <FoisMap style={{height: '100%'}}/>
+                </div>
+            </div>
+        )
+
+        /*return (
             <div style={{padding: '1em'}}>
                 <Grid columns={3}>
                     <Grid.Column width={4}>
                         <Header sub attached='top'>
-                            Search for sensors
+                            Search
                         </Header>
                         <Segment attached>
                             <Form>
@@ -57,6 +123,11 @@ class SensorsComponent extends Component {
                                     }}>Search</Button>
                             </Form>
                         </Segment>
+                        {sensors.selected.map((sensor, key) => (
+                            <div key={'snsel-row-'+sensor.id}>
+                                {sensor.name}
+                            </div>
+                        ))}
                         </Grid.Column>
                         <Grid.Column width={6}>
                         {
@@ -74,9 +145,8 @@ class SensorsComponent extends Component {
                                 </Header>
                                 <Segment attached>
 
-                                {/*<Grid divided='vertically'>*/}
                                 {sensors.data.map((sensor, key) => (
-                                    <div key={'sns-row-'+sensor.id}>
+                                    <div key={'snsrc-row-'+sensor.id}>
                                         <div style={{
                                                 fontSize: '1.5em',
                                                 fontWeight: 'bold',
@@ -88,7 +158,7 @@ class SensorsComponent extends Component {
                                         <div style={{
                                                 marginBottom: '0.8em'
                                             }}>
-                                            {sensor.sampled_foi}
+                                            {sensor.sampled_foi.identifier}
                                         </div>
                                         <Table celled size="small">
                                             <Table.Header>
@@ -114,52 +184,13 @@ class SensorsComponent extends Component {
                                             ))}
                                             </Table.Body>
                                         </Table>
-                                        <Divider/>
+                                        <Button
+                                            onClick={(e) => {
+                                                addOffering(sensor)
+                                            }}>Add</Button>
+                                        <Divider section/>
                                     </div>
-                                    /*<Grid.Row columns={2} key={'sns-row-'+sensor.id}>
-                                        <Grid.Column>
-                                            <div style={{
-                                                    fontSize: '1.2em',
-                                                    fontWeight: 'bold',
-                                                    marginBottom: '0.8em'
-                                                }}>
-                                                <Rating /> {sensor.name}
-                                            </div>
-                                            <div style={{
-                                                    marginBottom: '0.8em'
-                                                }}>
-                                                {sensor.sampled_foi}
-                                            </div>
-                                        </Grid.Column>
-                                        <Grid.Column>
-                                            <Table celled>
-                                                <Table.Header>
-                                                    <Table.Row>
-                                                        <Table.HeaderCell>
-                                                            Observed property
-                                                        </Table.HeaderCell>
-                                                        <Table.HeaderCell>
-                                                            Unit of measure
-                                                        </Table.HeaderCell>
-                                                    </Table.Row>
-                                                </Table.Header>
-                                                <Table.Body>
-                                                {sensor.observable_properties.map((op, key) => (
-                                                    <Table.Row key={"sns-row-op-"+op.id}>
-                                                        <Table.Cell>
-                                                            {op.name}
-                                                        </Table.Cell>
-                                                        <Table.Cell>
-                                                            {op.uom}
-                                                        </Table.Cell>
-                                                    </Table.Row>
-                                                ))}
-                                                </Table.Body>
-                                            </Table>
-                                        </Grid.Column>
-                                    </Grid.Row>*/
                                 ))}
-                                {/*</Grid>*/}
                                 </Segment>
 
                             </div>
@@ -171,6 +202,7 @@ class SensorsComponent extends Component {
                     </Grid>
                 </div>
             )
+            */
         }
     };
 

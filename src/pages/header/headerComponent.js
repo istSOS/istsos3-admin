@@ -18,7 +18,9 @@ class HeaderComponent extends Component {
         // const {login, checkCredential} = this.props;
         const { t, location, history } = this.props;
         return (
-            <Menu stackable inverted>
+            <Menu stackable inverted style={{
+                    backgroundColor: 'rgb(31, 117, 51)'
+                }}>
                 <Menu.Item style={{
                         "fontWeight": "bold",
                         //"color": "#65f102"

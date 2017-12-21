@@ -1,6 +1,5 @@
 // *** REDUCERS ***
 
-import { combineReducers } from 'redux';
 import offerings from './offerings';
 import offering from './offering';
 import specimen from './specimen';
@@ -30,7 +29,7 @@ import processingdetails from '../common/processingDetails/processingDetailsStat
 import processingdetailform from '../common/processingDetailForm/processingDetailFormState';
 import featureWizard from '../pages/create/feature/featureStore';
 
-const appState = combineReducers({
+export const webReducers = {
     offerings,
     offering,
     specimen,
@@ -59,6 +58,4 @@ const appState = combineReducers({
     processingdetails,
     processingdetailform,
     featureWizard
-});
-
-export default appState;
+};

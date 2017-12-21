@@ -13,17 +13,10 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 
 import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
-import thunkMiddleware from 'redux-thunk';
-import reducer from './reducers';
 
-const store = createStore(
-    reducer,
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-    applyMiddleware(
-        thunkMiddleware
-    )
-);
+import {webReducers} from './reducers';
+import {store, injectReducer} from 'istsos3-core';
+injectReducer(store, webReducers);
 
 ReactDOM.render(
     <I18nextProvider i18n={ i18n }>

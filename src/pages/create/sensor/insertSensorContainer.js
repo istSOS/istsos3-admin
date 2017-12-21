@@ -52,8 +52,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
                     sensorTypes.id
                 )
             );
-            debugger;
-            console.log("ciao");
             // Configure the foi form
             dispatch(
                 foiSamplingForced(sensorTypes.foiType)

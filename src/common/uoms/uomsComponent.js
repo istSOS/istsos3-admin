@@ -27,9 +27,9 @@ class UomsComponent extends Component {
         } = this.props;
         for (var i = 0; i < uoms.data.length; i++) {
             if(uoms.data[i].name === data.value){
-                uomSelected(data.value);
+                uomSelected(uoms.data[i]);
                 if(onSelected!==undefined){
-                    onSelected(data.value);
+                    onSelected(uoms.data[i]);
                 }
                 break;
             }
@@ -56,10 +56,6 @@ class UomsComponent extends Component {
                     //fluid={true}
                     options={options}
                     placeholder='Select an unit of measure'
-                    value={
-                        uoms.selected !== null?
-                        uoms.selected: null
-                    }
                     onChange={this.handleChange}/>
                 {
                     uoms.dialog===true?

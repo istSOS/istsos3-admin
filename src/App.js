@@ -14,7 +14,7 @@ import Header from './pages/header/headerContainer';
 import HomeComponent from './pages/home/homeComponent';
 //import {default as FoisCreator} from './pages/create/fois/foisContainer';
 import FeatureWizard from './pages/create/feature/featureContainer';
-import Sensors from './pages/sensors/sensorsContainer';
+//import Sensors from './pages/sensors/sensorsContainer';
 
 // Viewer
 //import FoisList from './common/foisList/foisListContainer';
@@ -24,6 +24,19 @@ import Fois from './pages/fois/foisContainer';
 import InsertSensorContainer from './pages/create/sensor/insertSensorContainer';
 import OfferingCreator from './create/offering/offeringCreatorContainer';
 import Specimen from './pages/create/specimen/specimenContainer';
+
+// istSOS Plugins
+import {
+    Viewer,
+    reducers
+} from 'istsos3-viewer';
+
+// Inject reducers
+import {
+    store,
+    injectReducer
+} from 'istsos3-core';
+injectReducer(store, reducers);
 
 const routes = [
     {
@@ -35,7 +48,7 @@ const routes = [
     {
         path: '/sensors',
         sidebar: () => <div>bubblegum!</div>,
-        body: Sensors
+        body: Viewer
     },
     {
         path: '/fois',
@@ -86,10 +99,15 @@ class App extends Component {
                     }}>
                     <Header/>
                     <div id="appBody" style={{
-                            flexGrow: 1,
+                            /*flexGrow: 1,
                             padding: '1em',
                             width: "100%",
-                            overflow: "auto"
+                            overflow: "auto"*/
+                            overflow: 'hidden',
+                            height: '100%',
+                            display: 'flex',
+                            flex: 1,
+                            flexDirection: 'column'
                         }}>
                         <Switch>
                             {

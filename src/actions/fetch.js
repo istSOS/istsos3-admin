@@ -24,25 +24,25 @@ export function fetch(
                 ...data
             }
         })
-            .then(function(response) {
-                if(onSuccess!==undefined){
-                    onSuccess(dispatch, response.data);
-                }else{
-                    dispatch({
-                        type: fetchingAction + "_OK",
-                        json: response.data,
-                        status: response.status,
-                        message: response.statusText
-                    });
-                }
-            })
-            .catch(function (error) {
+        .then(function(response) {
+            if(onSuccess!==undefined){
+                onSuccess(dispatch, response.data);
+            }else{
                 dispatch({
-                    type: fetchingAction + "_ERROR",
-                    json: error.response.data,
-                    status: error.response.status,
-                    message: error.response.statusText
+                    type: fetchingAction + "_OK",
+                    json: response.data,
+                    status: response.status,
+                    message: response.statusText
                 });
+            }
+        })
+        .catch(function (error) {
+            dispatch({
+                type: fetchingAction + "_ERROR",
+                json: error.response.data,
+                status: error.response.status,
+                message: error.response.statusText
             });
+        });
     }
 };

@@ -290,14 +290,16 @@ class FoisMapComponent extends Component {
         return (
             <div style={{
                     width: '100%',
+                    height: '100%',
                     border: 'thin solid #cccccc'
                 }}>
                 {/*<Menu secondary style={{margin: '0px'}}>
                     {this.getToolbar()}
                 </Menu>*/}
-                <div className="container-fluid" id='map-container' style={{
-                    padding: '0px',
-                    height: '500px'
+                <div id='map-container' style={{
+                    width: '100%',
+                    height: '100%',
+                    padding: '0px'
                 }}></div>
             </div>
         )

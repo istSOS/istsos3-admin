@@ -7,7 +7,9 @@ import {
     // Filtering actions
     applyObsPropFilter,
     resetDateRange,
-    updateDateRange
+    updateDateRange,
+    addOffering,
+    removeOffering
 } from './sensorsAction';
 
 import SensorsComponent from './sensorsComponent';
@@ -49,6 +51,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         updateDateRange: (data) => {
             dispatch(updateDateRange(data));
+        },
+        addOffering: (offering) => {
+            dispatch(addOffering(offering));
+        },
+        removeOffering: (index) => {
+            dispatch(removeOffering(index));
         }
     }
 };
