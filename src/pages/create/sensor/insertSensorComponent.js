@@ -6,311 +6,402 @@ import {
 
 
 // istSOS components
-import { foiform2entity } from '../../../common/foiForm/foiFormAction';
+import {
+    foiform2entity
+} from '../../../common/foiForm/foiFormAction';
+
 import {
     //Material,
     //Uoms,
     FoisMap,
-    SensorForm,
+    //SensorForm,
     SpecimenForm,
-    FoiForm,
-    FoisList,
+    //FoisList,
     setting
 } from '../../../common';
+
+import {
+    Mappa,
+    Fois,
+    SensorForm,
+    FoiForm
+} from 'istsos3-ui';
 
 //import Fois from '../fois/foisContainer';
 
 // Semantic UI components
 import {
     Grid,
-    //Container,
-    //Form,
     Card,
-    //Input,
+    Segment,
     Icon,
     Button,
-    Image,
     Header,
     Divider,
-    //List
+    Tab,
+    Menu
 } from 'semantic-ui-react';
 
 class InsertSensorComponent extends Component {
 
-    startPage = () => {
-        const {
-            insertsensor,
-            selectSensorType,
-            selectObservationType
-        } = this.props;
-        const sensorTypes = insertsensor.sensorTypes;
+    local = {
+        sensorTypes: {
+            "1": {
+                id: '1',
+                name: "Insitu Fixed",
+                description: "Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur aliquet quam id dui posuere blandit.",
+                fixed: true,
+                icon: "/img/st/1.png",
+                foiType: setting._SAMPLING_POINT
+            },
+            /*"2": {
+                id: '2',
+                name: "Insitu Mobile",
+                description: "Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur aliquet quam id dui posuere blandit.",
+                fixed: false,
+                icon: "/img/st/2.png",
+                foiType: setting._SAMPLING_CURVE
+            },*/
+            "3": {
+                id: '3',
+                name: "Specimen fixed",
+                description: "Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur aliquet quam id dui posuere blandit.",
+                fixed: true,
+                icon: "/img/st/3.png",
+                foiType: setting._SAMPLING_SPECIMEN
+            }
+        },
+        observationTypes: {
+            "1": {
+                id: "1",
+                name: "Single Observation in Time",
+                description: "Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur aliquet quam id dui posuere blandit.",
+                icon: "/img/ot/1.png"
+            },
+            "2": {
+                id: "2",
+                name: "Multiple Observation in Time",
+                description: "Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur aliquet quam id dui posuere blandit.",
+                icon: "/img/ot/2.png"
+            }
+        }
+    }
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            // Configurations
+            skipSpecimen: false,
+            newTab: false,
+            sensorType: null,
+            foiType: null,
+            observationType: null,
+            material: null,
+            config: {},
+
+            // Sensor metadata
+            sensor: null,
+
+            // Selected existing Foi
+            existingFoi: null,
+            newFoi: null,
+            foiValid: false,
+
+            // Validations
+            metadataValid: false,
+            observedPropertiesValid: false,
+        };
+        this.sensorMetadataChanged = this.sensorMetadataChanged.bind(this);
+        this.sensorObservedPropertiesChanged = this.sensorObservedPropertiesChanged.bind(this);
+        this.selectSensorType = this.selectSensorType.bind(this);
+        this.selectObservationType = this.selectObservationType.bind(this);
+        this.toggleFoiEdit = this.toggleFoiEdit.bind(this);
+        this.selectFoi = this.selectFoi.bind(this);
+        this.foiChanged = this.foiChanged.bind(this);
+
+        this.props.history.push(
+            '/create/sensor'
+        )
+    }
+
+    selectSensorType(sensorTypes){
+        this.setState({
+            ...this.state,
+            sensorType: sensorTypes.id,
+            foiType: sensorTypes.foiType
+        });
+    }
+
+    selectObservationType(observationType){
+        this.setState({
+            ...this.state,
+            observationType: observationType.id
+        });
+    }
+
+    sensorMetadataChanged (metadata, valid) {
+        this.setState({
+            ...this.state,
+            sensor: {
+                ...this.state.sensor,
+                ...metadata
+            },
+            metadataValid: valid
+        });
+    }
+
+    sensorObservedPropertiesChanged (observable_properties, valid) {
+        this.setState({
+            ...this.state,
+            sensor: {
+                ...this.state.sensor,
+                ...observable_properties
+            },
+            observedPropertiesValid: valid
+        });
+    }
+
+    toggleFoiEdit(newTab){
+        let foiValid = false;
+        if(!newTab){
+            foiValid = this.state.existingFoi !== null;
+        }
+        this.setState({
+            ...this.state,
+            newTab: newTab,
+            foiValid: foiValid,
+            sensor: {
+                ...this.state.sensor,
+                sampled_foi: {
+                    ...(
+                        newTab? this.state.newFoi: this.state.existingFoi
+                    )
+                }
+            }
+        });
+    }
+
+    foiChanged (foi, valid) {
+        this.setState({
+            ...this.state,
+            foiValid: valid,
+            newFoi: foi,
+            sensor: {
+                ...this.state.sensor,
+                sampled_foi: {
+                    ...foi
+                }
+            }
+        });
+    }
+
+    selectFoi(foi){
+        this.setState({
+            ...this.state,
+            foiValid: true,
+            existingFoi: foi,
+            sensor: {
+                ...this.state.sensor,
+                sampled_foi: {
+                    ...foi
+                }
+            }
+        });
+    }
+
+    startPage(){
+        // const {
+        //     insertsensor
+        // } = this.props;
+        const sensorTypes = this.local.sensorTypes;
         const sensorTypesArr = Object.keys(sensorTypes);
-        const observationTypes = insertsensor.observationTypes;
+        const observationTypes = this.local.observationTypes;
         const observationTypesArr = Object.keys(observationTypes);
         return (
-            <div>
-                <Header as="h3">
-                    Sensor Type
-                </Header>
-                <Card.Group>
-                    {
-                        sensorTypesArr.map((id, index) => (
-                            <Card
-                                color = {
-                                    insertsensor.sensorType === id ?
-                                    'green': null
-                                }
-                                key={"is-st-c-"+index}>
-                                <Card.Content>
-                                    <Image
-                                        floated='right' size='tiny'
-                                        src={sensorTypes[id].icon}/>
-                                    <Card.Header>
-                                        {sensorTypes[id].name}
-                                    </Card.Header>
-                                    <Card.Meta style={{
-                                            wordWrap: 'break-word'
-                                        }}>
-                                        {sensorTypes[id].foiType.replace(
-                                            setting._foidef, ''
-                                        )}
-                                    </Card.Meta>
-                                    <Card.Description>
-                                        {sensorTypes[id].description}
-                                    </Card.Description>
-                                </Card.Content>
-                                <Card.Content extra
-                                    textAlign="right">
-                                    <Button
-                                        onClick={e => {
-                                            selectSensorType(
-                                                sensorTypes[id]
-                                            );
-                                        }}
+            <div style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    height: '100%'
+                }}>
+                <div style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        flex: '1 1 0%',
+                        margin: '2rem'
+                        //alignItems: 'center'
+                    }}>
+                    <div style={{
+                            margin: "0px 3.5em 0.875em 1.5em",
+                            minWidth: "200px"
+                        }}>
+                        <Header as="h3">
+                            <Icon name='podcast' />
+                            <Header.Content>
+                                Sensor Type
+                            </Header.Content>
+                        </Header>
+                        <p>
+                            Donec sollicitudin molestie malesuada. Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem.
+                        </p>
+                        <p>
+                            Pellentesque in ipsum id orci porta dapibus. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem.
+                            Quisque velit nisi, pretium ut lacinia in, elementum id enim.
+                        </p>
+                    </div>
+                    <div style={{
+                            flex: '1 1 0%'
+                        }}>
+                        <Card.Group>
+                            {
+                                sensorTypesArr.map((id, index) => (
+                                    <Card
                                         color = {
-                                            insertsensor.sensorType === id ?
+                                            this.state.sensorType === id ?
+                                            'green': null
+                                        }
+                                        key={"is-st-c-"+index}>
+                                        <Card.Content>
+                                            <Card.Header>
+                                                {sensorTypes[id].name}
+                                            </Card.Header>
+                                            <Card.Description>
+                                                {sensorTypes[id].description}
+                                            </Card.Description>
+                                        </Card.Content>
+                                        <Card.Content extra
+                                            textAlign="right">
+                                            <Button
+                                                onClick={e => {
+                                                    this.selectSensorType(
+                                                        sensorTypes[id]
+                                                    );
+                                                }}
+                                                color = {
+                                                    this.state.sensorType === id ?
+                                                    'green': null
+                                                }>
+                                                {
+                                                    this.state.sensorType === id ?
+                                                    <Icon name='check' />: null
+                                                }
+                                                Select
+                                            </Button>
+                                        </Card.Content>
+                                    </Card>
+                                ))
+                            }
+                        </Card.Group>
+                    </div>
+                </div>
+                <div style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        flex: '1 1 0%',
+                        margin: '2rem'
+                        //alignItems: 'center'
+                    }}>
+                    <div style={{
+                            margin: "0px 3.5em 0.875em 1.5em",
+                            minWidth: "200px"
+                        }}>
+                        <Header as="h3">
+                            <Icon name='database' />
+                            <Header.Content>
+                                Result Type
+                            </Header.Content>
+                        </Header>
+                        <p>
+                            Donec sollicitudin molestie malesuada. Vivamus
+                            suscipit tortor eget felis porttitor volutpat.
+                            Curabitur arcu erat, accumsan id imperdiet et,
+                            porttitor at sem.
+                        </p>
+                        <p>
+                            Pellentesque in ipsum id orci porta dapibus.
+                            Curabitur arcu erat, accumsan id imperdiet et,
+                            porttitor at sem. Quisque velit nisi, pretium ut
+                            lacinia in, elementum id enim.
+                        </p>
+                    </div>
+                    <div style={{
+                            flex: '1 1 0%'
+                        }}>
+                        <Card.Group>
+                            {
+                                observationTypesArr.map((id, index) => (
+                                    <Card
+                                        key={"is-rt-c-"+index}
+                                        color = {
+                                            this.state.observationType === id ?
                                             'green': null
                                         }>
-                                        {
-                                            insertsensor.sensorType === id ?
-                                            <Icon name='check' />: null
-                                        }
-                                        Select
-                                    </Button>
-                                </Card.Content>
-                            </Card>
-                        ))
-                    }
-                </Card.Group>
-                <Header as="h3">
-                    Result Type
-                </Header>
-                <Card.Group>
-                    {
-                        observationTypesArr.map((id, index) => (
-                            <Card
-                                key={"is-rt-c-"+index}
-                                color = {
-                                    insertsensor.observationType === id ?
-                                    'green': null
-                                }>
-                                {/*<Image
-                                    src={observationTypes[id].icon}/>*/}
-                                <Card.Content>
-                                    <Card.Header>
-                                        {observationTypes[id].name}
-                                    </Card.Header>
-                                    <Card.Description>
-                                        {observationTypes[id].description}
-                                    </Card.Description>
-                                </Card.Content>
-                                <Card.Content extra
-                                    textAlign="right">
-                                    <Button
-                                        color = {
-                                            insertsensor.observationType === id ?
-                                            'green': null
-                                        }
-                                        onClick={e => {
-                                            selectObservationType(id);
-                                        }}>
-                                        {
-                                            insertsensor.observationType === id ?
-                                            <Icon name='check' />: null
-                                        }
-                                        Select
-                                    </Button>
-                                </Card.Content>
-                            </Card>
-                        ))
-                    }
-                </Card.Group>
+                                        {/*<Image
+                                            src={observationTypes[id].icon}/>*/}
+                                        <Card.Content>
+                                            <Card.Header>
+                                                {observationTypes[id].name}
+                                            </Card.Header>
+                                            <Card.Description>
+                                                {observationTypes[id].description}
+                                            </Card.Description>
+                                        </Card.Content>
+                                        <Card.Content extra
+                                            textAlign="right">
+                                            <Button
+                                                color = {
+                                                    this.state.observationType === id ?
+                                                    'green': null
+                                                }
+                                                onClick={e => {
+                                                    this.selectObservationType(
+                                                        observationTypes[id]
+                                                    );
+                                                }}>
+                                                {
+                                                    this.state.observationType === id ?
+                                                    <Icon name='check' />: null
+                                                }
+                                                Select
+                                            </Button>
+                                        </Card.Content>
+                                    </Card>
+                                ))
+                            }
+                        </Card.Group>
+                    </div>
+                </div>
             </div>
         )
     }
 
     finish = () => {
-        const {
-            register_sensor,
-            insertsensor,
-            sensorform,
-            specimenform,
-            fois,
-            //foisstate,
-            foiform
-        } = this.props;
+        // const {
+        //     register_sensor
+        // } = this.props;
 
-        debugger;
-
-        let observable_property = [],
-            observation_type = [],
-            oty_check = [],
-            config = null;
-
-        for (let c = 0, l = sensorform.observableProperties.length; c<l; c++){
-            const op = sensorform.observableProperties[c];
-            observable_property.push({
-                "definition": op.observedProperty.definition,
-                "uom": op.uom.name,
-                "type": op.resultType.definition
-            });
-            if (oty_check.indexOf(op.resultType.definition)===-1){
-                oty_check.push(op.resultType.definition)
-                observation_type.push(op.resultType.definition);
-            }
-        }
-        if(insertsensor.observationType === '2'){
-            observation_type.push(setting._COMPLEX_OBSERVATION);
-        }
+        let config = null;
 
         // Add the speciment template if sensor type is SF_Specimen
-        if (insertsensor.sensorType === '3' && !insertsensor.skipSpecimen){
-            config = {
-                "specimen": specimenform.data
-            };
-        }
-        // Check if FOI is new of an existing is selected
-        let sampled_foi;
-        if (insertsensor.newfoi === true){
-            sampled_foi = foiform2entity(foiform)
-        }else{
-            sampled_foi = fois.selected
-        }
+        // if (insertsensor.sensorType === '3' && !insertsensor.skipSpecimen){
+        //     config = {
+        //         "specimen": specimenform.data
+        //     };
+        // }
 
-        // OPTIONAL METADATA
-        let pd = {};
-        let hasPd = false;
-
-        // General Info
-        if((sensorform.keywords.length
-            + sensorform.alias.length
-            + sensorform.description.length) > 0){
-            pd["general_info"] = {};
-            if (sensorform.keywords.length>0){
-                hasPd = true;
-                pd["general_info"]["keywords"] = sensorform.keywords;
-            }
-            if (sensorform.alias.length>0){
-                hasPd = true;
-                pd["general_info"]["alias"] = sensorform.alias;
-            }
-            if (sensorform.description.length>0){
-                hasPd = true;
-                pd["general_info"]["description"] = sensorform.description;
-            }
-        }
-
-        // Identification
-        if(sensorform.manufacturer != null || (
-                (
-                    sensorform.modelNumber.length
-                    + sensorform.serialNumber.length
-                ) > 0
-            )){
-            pd["identification"] = {};
-            if (sensorform.manufacturer != null){
-                hasPd = true;
-                pd["identification"][
-                    "manufacturer"] = sensorform.manufacturer.username;
-            }
-            if (sensorform.modelNumber.length>0){
-                hasPd = true;
-                pd["identification"][
-                    "model_number"] = sensorform.modelNumber;
-            }
-            if (sensorform.serialNumber.length>0){
-                hasPd = true;
-                pd["identification"][
-                    "serial_number"] = sensorform.serialNumber;
-            }
-        }
-
-        // Capabilities
-        if((sensorform.samplingTimeResolution.length
-            + sensorform.acquisitionTimeResolution.length
-            + sensorform.storageCapacity.length
-            + sensorform.batteryCapacity.length) > 0){
-            pd["capabilities"] = {};
-            if (sensorform.samplingTimeResolution.length>0){
-                hasPd = true;
-                pd["capabilities"][
-                    "sampling_time_resolution"] = sensorform.samplingTimeResolution;
-            }
-            if (sensorform.acquisitionTimeResolution.length>0){
-                hasPd = true;
-                pd["capabilities"][
-                    "acquisition_time_resolution"] = sensorform.acquisitionTimeResolution;
-            }
-            if (sensorform.storageCapacity.length>0){
-                hasPd = true;
-                pd["capabilities"][
-                    "storage_capacity"] = sensorform.storageCapacity;
-            }
-            if (sensorform.batteryCapacity.length>0){
-                hasPd = true;
-                pd["capabilities"][
-                    "battery_capacity"] = sensorform.batteryCapacity;
-            }
-        }
-
-        // Contacts
-        if(sensorform.owner != null ||
-                sensorform.operator != null){
-            pd["contact"] = {};
-            if (sensorform.owner != null){
-                hasPd = true;
-                pd["contact"][
-                    "owner"] = sensorform.owner.username;
-            }
-            if (sensorform.operator != null){
-                hasPd = true;
-                pd["contact"][
-                    "operator"] = sensorform.operator.username;
-            }
-        }
-
-        register_sensor({
-            "name": sensorform.name,
-            "fixed": insertsensor.sensorTypes[
-                    insertsensor.sensorType
-                ].fixed,
-            "procedure": sensorform.name,
-            "procedure_description_format": [
-                "http://www.opengis.net/sensorML/1.0.1"
-            ],
-            "observable_properties": observable_property,
-            "observation_types": observation_type,
-            "foi_type": insertsensor.sensorTypes[
-                    insertsensor.sensorType
-                ].foiType,
-            "sampled_foi": sampled_foi,
-            "config": config,
-            ...(
-                hasPd? {
-                    "procedure_description": pd
-                }: null
-            )
+        console.log({
+            ...this.state.sensor,
+            "fixed": this.local.sensorTypes[
+                this.state.sensorType
+            ].fixed,
+            "config": config
         });
+        // register_sensor({
+        //     ...this.state.sensor,
+        //     "fixed": this.local.sensorTypes[
+        //         this.state.sensorType
+        //     ].fixed,
+        //     "config": config
+        // });
     }
 
     render() {
@@ -320,16 +411,22 @@ class InsertSensorComponent extends Component {
             specimenform,
             insertsensor,
             skipSpecimentPage,
-            sensorform,
+            //sensorform,
             foiform,
-            toggleFoiEdit,
-            fois
+            fois,
+            map
         } = this.props;
+
         return (
-            <Grid columns='equal'>
-                <Grid.Column width={2}>
-                </Grid.Column>
-                <Grid.Column>
+            <div style={{
+                flex: '1 1 0%',
+                display: 'flex',
+                flexDirection: 'row'
+            }}>
+                <div style={{
+                    flex: '1 1 0%',
+                    padding: "2rem"
+                }}>
                     <Route
                         path='/create/sensor'
                         exact={true}
@@ -364,56 +461,266 @@ class InsertSensorComponent extends Component {
                         path='/create/sensor/metadata'
                         exact={true}
                         render={(routeProps) => (
-                            <div>
-                                <Header as='h3'>
-                                    Sensor metadata
-                                </Header>
-                                <SensorForm layout="metadata"/>
+                            <div style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    height: '100%'
+                                }}>
+                                <div style={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        flex: '1 1 0%'
+                                        //alignItems: 'center'
+                                    }}>
+                                    <div style={{
+                                            margin: "2rem 3.5em 0.875em 1.5em",
+                                            maxWidth: "450px"
+                                        }}>
+                                        <Header as="h3">
+                                            <Icon name='code' />
+                                            <Header.Content>
+                                                Sensor metadata
+                                            </Header.Content>
+                                        </Header>
+                                        <p>
+                                        Donec sollicitudin molestie malesuada. Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem.
+                                        </p>
+                                        <p>
+                                        Pellentesque in ipsum id orci porta dapibus. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem.
+                                        </p>
+                                        <p>
+                                        Quisque velit nisi, pretium ut lacinia in, elementum id enim.
+                                        </p>
+                                    </div>
+                                    <Segment style={{
+                                            flex: '1 1 0%',
+                                            overflowY: "auto",
+                                            padding: "2rem"
+                                        }}>
+                                        <SensorForm
+                                            layout="metadata"
+                                            sensor={
+                                                this.state.sensor === null?
+                                                undefined: this.state.sensor
+                                            }
+                                            onChange={this.sensorMetadataChanged}/>
+                                    </Segment>
+                                </div>
                             </div>
                         )}/>
                     <Route
                         path='/create/sensor/observedproperties'
                         exact={true}
-                        render={(routeProps) => {
-                            if (insertsensor.observationType === '1'){
-                                return <SensorForm
-                                    single={true}
-                                    layout="observedproperties"/>;
-                            }else{
-                                return <SensorForm
-                                    layout="observedproperties"/>;
-                            }
-                        }}/>
+                        render={(routeProps) => (
+                            <div style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    height: '100%'
+                                }}>
+                                <div style={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        flex: '1 1 0%'
+                                        //alignItems: 'center'
+                                    }}>
+                                    <div style={{
+                                            margin: "2rem 3.5em 0.875em 1.5em",
+                                            maxWidth: "450px"
+                                        }}>
+                                        <Header as="h3">
+                                            <Icon name='find' />
+                                            <Header.Content>
+                                                Observed properties
+                                            </Header.Content>
+                                        </Header>
+                                        <p>
+                                        Donec sollicitudin molestie malesuada. Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem.
+                                        </p>
+                                        <p>
+                                        Pellentesque in ipsum id orci porta dapibus. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem.
+                                        </p>
+                                        <p>
+                                        Quisque velit nisi, pretium ut lacinia in, elementum id enim.
+                                        </p>
+                                    </div>
+                                    <Segment style={{
+                                            flex: '1 1 0%',
+                                            display: "flex",
+                                            flexDirection: 'column',
+                                            padding: "2rem"
+                                        }}>
+                                        <SensorForm
+                                            single={this.state.observationType === '1'}
+                                            layout="observedproperties"
+                                            sensor={
+                                                this.state.sensor === null?
+                                                undefined: this.state.sensor
+                                            }
+                                            onChange={this.sensorObservedPropertiesChanged}/>
+                                    </Segment>
+                                </div>
+                            </div>
+                        )}/>
                     <Route
                         path='/create/sensor/featureofinterest'
                         exact={true}
                         render={(routeProps) => (
-                            <div>
-                                <Header as='h3'>
-                                    Feature of interest
-                                </Header>
-                                <Button.Group>
-                                    <Button
-                                        positive={!insertsensor.newfoi}
-                                        onClick={e => {
-                                            toggleFoiEdit(false);
-                                        }}>Select existing</Button>
-                                    <Button.Or />
-                                    <Button
-                                        positive={insertsensor.newfoi}
-                                        onClick={e => {
-                                            toggleFoiEdit(true);
-                                        }}>Create new</Button>
-                                </Button.Group>
-                                {
-                                    insertsensor.newfoi?
-                                    <FoiForm
-                                        hideButton={true}
-                                        hide={{
-                                            coordinates: true
-                                        }}/>:
-                                    <FoisList/>
-                                }
+                            <div style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    height: '100%'
+                                }}>
+                                <div style={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        flex: '1 1 0%'
+                                        //alignItems: 'center'
+                                    }}>
+                                    <div style={{
+                                            margin: "2rem 3.5em 0.875em 1.5em",
+                                            maxWidth: "450px"
+                                        }}>
+                                        <Header as="h3">
+                                            <Icon name='find' />
+                                            <Header.Content>
+                                                Feature of interest
+                                            </Header.Content>
+                                        </Header>
+                                        <p>
+                                        Donec sollicitudin molestie malesuada. Vivamus suscipit tortor eget felis porttitor volutpat.
+                                        Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem.
+                                        </p>
+                                        <p>
+                                        Pellentesque in ipsum id orci porta dapibus. Curabitur arcu erat, accumsan id imperdiet et,
+                                        porttitor at sem.
+                                        </p>
+                                        <p>
+                                        Quisque velit nisi, pretium ut lacinia in, elementum id enim.
+                                        </p>
+                                    </div>
+                                    <Segment style={{
+                                            flex: '1 1 0%',
+                                            display: "flex",
+                                            flexDirection: 'column',
+                                            padding: "2rem"
+                                        }}>
+                                        <Tab
+                                            activeIndex={
+                                                this.state.newTab? 1: 0
+                                            }
+                                            menu={{ secondary: true, pointing: true }}
+                                            panes={[
+                                                {
+                                                    menuItem: <Menu.Item key='isw-isf-1'>
+                                                        Select existing
+                                                    </Menu.Item>
+                                                },
+                                                {
+                                                    menuItem: <Menu.Item key='isw-isf-2'>
+                                                        Create new
+                                                    </Menu.Item>
+                                                }
+                                            ]}
+                                            onTabChange={(e, d) => {
+                                                // setMode(d.activeIndex);
+                                                if(d.activeIndex === 0){
+                                                    this.toggleFoiEdit(false);
+                                                }else{
+                                                    this.toggleFoiEdit(true);
+                                                }
+                                            }}/>
+                                        <div style={{
+                                                    flex: "1 1 0%",
+                                                    overflowY: "auto",
+                                                    padding: "1em 0px",
+                                                    display: "flex",
+                                                    flexDirection: "row"
+                                                }}>
+                                            {
+                                                this.state.newTab?
+                                                [
+                                                    <Segment.Group key="isc-fl" style={{
+                                                            flex: "0.4 1 0%",
+                                                            flexDirection: "column",
+                                                            display: "flex",
+                                                            margin: "0px"
+                                                        }}>
+                                                        {/*<Segment color='black'>
+                                                            <Header sub>Feature of interests:</Header>
+                                                        </Segment>*/}
+                                                        <Segment style={{
+                                                                flex: "1 1 0%",
+                                                                overflowY: "auto"
+                                                            }}>
+                                                            <FoiForm
+                                                                foiType={this.state.foiType}
+                                                                foi={this.state.newFoi}
+                                                                onChange={this.foiChanged}/>
+                                                        </Segment>
+                                                    </Segment.Group>,
+                                                    <div key="isc-fm" style={{
+                                                                flex: "0.6 1 0%"
+                                                            }}>
+                                                        <Mappa key="isc-fm1"
+                                                            highlighted={
+                                                                this.state.sensor != null && this.state.sensor.hasOwnProperty('sampled_foi')?
+                                                                    [this.state.sensor.sampled_foi.id]: []
+                                                            }
+                                                            fois={{
+                                                                data: fois.data,
+                                                                isFetching: fois.isFetching
+                                                            }}/>
+                                                    </div>
+                                                ]:
+                                                [
+                                                    <Segment.Group key="isc-fl" style={{
+                                                            flex: "0.4 1 0%",
+                                                            flexDirection: "column",
+                                                            display: "flex",
+                                                            margin: "0px"
+                                                        }}>
+                                                        {/*<Segment color='black'>
+                                                            <Header sub>Feature of interests:</Header>
+                                                        </Segment>*/}
+                                                        <Segment style={{
+                                                                flex: "1 1 0%",
+                                                                overflow: "hidden",
+                                                                display: "flex",
+                                                                flexDirection: "column",
+                                                                padding: "0px 0px 0px 1em"
+                                                            }}>
+                                                            <Fois
+                                                                layout='list'
+                                                                activeItem={
+                                                                    this.state.existingFoi !== null?
+                                                                    this.state.existingFoi.identifier: null
+                                                                }
+                                                                onSelected={(foi)=>{
+                                                                    this.selectFoi(foi);
+                                                                }}
+                                                                filter={{
+                                                                    map_ids: map.fiex
+                                                                }}/>
+                                                        </Segment>
+                                                    </Segment.Group>,
+                                                    <div key="isc-fm" style={{
+                                                                flex: "1 1 0%"
+                                                            }}>
+                                                        <Mappa key="isc-fm2"
+                                                            highlighted={
+                                                                this.state.sensor != null && this.state.sensor.hasOwnProperty('sampled_foi')?
+                                                                    [this.state.sensor.sampled_foi.id]: []
+                                                            }
+                                                            fois={{
+                                                                data: fois.data,
+                                                                isFetching: fois.isFetching
+                                                            }}/>
+                                                    </div>
+                                                ]
+                                            }
+                                        </div>
+                                    </Segment>
+                                </div>
                             </div>
                         )}/>
                     <Route
@@ -439,8 +746,15 @@ class InsertSensorComponent extends Component {
                                     edit={foiform.shape}/>
                             </div>
                         )}/>
-                </Grid.Column>
-                <Grid.Column width={3}>
+                </div>
+                <div style={{
+                    width: "400px",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    padding: "2rem",
+                    boxShadow: "rgba(50, 50, 50, 0.75) 0px 0px 3px 0px"
+                }}>
                     <Card>
                         <Route
                             path='/create/sensor'
@@ -462,14 +776,14 @@ class InsertSensorComponent extends Component {
                                     <div className='ui two buttons'>
                                         <Button
                                             primary={(
-                                                    insertsensor.sensorType !== null &&
-                                                    insertsensor.observationType !== null)}
+                                                    this.state.sensorType !== null &&
+                                                    this.state.observationType !== null)}
                                             disabled={!(
-                                                    insertsensor.sensorType !== null &&
-                                                    insertsensor.observationType !== null)}
+                                                    this.state.sensorType !== null &&
+                                                    this.state.observationType !== null)}
                                             content='Continue'
                                             onClick={(e) => {
-                                                if (insertsensor.sensorType === '3'){
+                                                if (this.state.sensorType === '3'){
                                                     history.push(
                                                         '/create/sensor/specimen'
                                                     );
@@ -573,8 +887,8 @@ class InsertSensorComponent extends Component {
                                     key={'fwcsc-2'}>
                                     <div className='ui two buttons'>
                                         <Button
-                                            primary={sensorform.valid}
-                                            disabled={!sensorform.valid}
+                                            primary={this.state.metadataValid}
+                                            disabled={!this.state.metadataValid}
                                             fluid
                                             content='Continue'
                                             onClick={(e)=>(
@@ -604,24 +918,8 @@ class InsertSensorComponent extends Component {
                                     key={'fwcsc-2'}>
                                     <div className='ui two buttons'>
                                         <Button
-                                            primary={(
-                                                (
-                                                    insertsensor.observationType === '1'
-                                                    && sensorform.observableProperties.length === 1
-                                                ) || (
-                                                    insertsensor.observationType === '2'
-                                                    && sensorform.observableProperties.length > 1
-                                                )
-                                            )}
-                                            disabled={!(
-                                                (
-                                                    insertsensor.observationType === '1'
-                                                    && sensorform.observableProperties.length === 1
-                                                ) || (
-                                                    insertsensor.observationType === '2'
-                                                    && sensorform.observableProperties.length > 1
-                                                )
-                                            )}
+                                            primary={this.state.observedPropertiesValid}
+                                            disabled={!this.state.observedPropertiesValid}
                                             fluid
                                             content='Continue'
                                             onClick={(e)=>(
@@ -650,29 +948,25 @@ class InsertSensorComponent extends Component {
                                     key={'fwcsc-2'}>
                                     <div className='ui two buttons'>
                                         <Button
-                                            primary={(
-                                                (!insertsensor.newfoi && fois.selected!==null) ||
-                                                (insertsensor.newfoi && foiform.valid===true)
-                                            )}
-                                            disabled={!(
-                                                (!insertsensor.newfoi && fois.selected!==null) ||
-                                                (insertsensor.newfoi && foiform.valid===true)
-                                            )}
+                                            primary={this.state.foiValid}
+                                            disabled={!this.state.foiValid}
                                             fluid
-                                            content={
-                                                insertsensor.newfoi? 'Continue': 'Checkout'
-                                            }
+                                            content={'Checkout'}
                                             onClick={(e)=>{
-                                                if(insertsensor.newfoi){
-                                                    history.push(
-                                                        '/create/sensor/featureofinterest/map'
-                                                    )
-                                                }else{
-                                                    history.push(
-                                                        '/create/sensor/checkout'
-                                                    )
-                                                    this.finish();
-                                                }
+                                                history.push(
+                                                    '/create/sensor/checkout'
+                                                )
+                                                this.finish();
+                                                // if(insertsensor.newTab){
+                                                //     history.push(
+                                                //         '/create/sensor/featureofinterest/map'
+                                                //     )
+                                                // }else{
+                                                //     history.push(
+                                                //         '/create/sensor/checkout'
+                                                //     )
+                                                //     this.finish();
+                                                // }
                                             }}/>
                                     </div>
                                 </Card.Content>
@@ -707,10 +1001,11 @@ class InsertSensorComponent extends Component {
                                 </Card.Content>
                             ])}/>
                     </Card>
-                </Grid.Column>
-            </Grid>
-        )
+                </div>
+            </div>
+        );
     }
+
 };
 
 export default withRouter(InsertSensorComponent);

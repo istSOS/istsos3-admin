@@ -5,7 +5,7 @@ import offering from './offering';
 import specimen from './specimen';
 import observableproperties from '../common/observableProperties/observablePropertiesState';
 import samplingmethods from '../common/samplingMethods/samplingMethodsState';
-import observationtypes from '../common/observationTypes/observationTypesState';
+//import observationtypes from '../common/observationTypes/observationTypesState';
 import uoms from '../common/uoms/uomsState';
 import fois from './fois';
 import foiform from '../common/foiForm/foiFormState';
@@ -16,7 +16,7 @@ import specimenform from '../common/specimenForm/specimenFormState';
 import uomform from '../common/uomForm/uomFormState';
 import samplingtypes from './samplingtypes';
 import sensors from '../pages/sensors/sensorsState';
-import insertsensor from '../pages/create/sensor/insertSensorState';
+import web_insertsensor from '../pages/create/sensor/insertSensorState';
 import insertspecimen from '../pages/create/specimen/specimenState';
 import foisstate from '../pages/create/fois/foisState';
 import foismap from '../common/foisMap/foisMapState';
@@ -36,7 +36,7 @@ export const webReducers = {
     materials,
     observableproperties,
     samplingmethods,
-    observationtypes,
+    //observationtypes,
     uoms,
     fois,
     foiform,
@@ -47,7 +47,7 @@ export const webReducers = {
     foisstate,
     samplingtypes,
     sensors,
-    insertsensor,
+    web_insertsensor,
     insertspecimen,
     foismap,
     domains,

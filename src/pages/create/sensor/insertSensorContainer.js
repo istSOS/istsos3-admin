@@ -3,13 +3,11 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 
-import {
-    foiSamplingForced
-} from '../../../common/foiForm/foiFormAction';
+// import {
+//     foiSamplingForced
+// } from '../../../common/foiForm/foiFormAction';
 
 import {
-    selectSensorType,
-    selectObservationType,
     toggleResultType,
     setWizardPage,
     nextWizardPage,
@@ -17,7 +15,7 @@ import {
     register_sensor,
     geometryAdded,
     skipSpecimentPage,
-    toggleFoiEdit
+    //selectFoi
 } from './insertSensorAction';
 
 import InsertSensorComponent from './insertSensorComponent';
@@ -33,8 +31,9 @@ class InsertSensorContainer extends Component {
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        insertsensor: state.insertsensor,
-        fois: state.fois,
+        insertsensor: state.web_insertsensor,
+        fois: state.core_fois,
+        map: state.core_map,
         foiform: state.foiform,
         foisstate: state.foisstate,
         observableproperties: state.observableproperties,
@@ -46,20 +45,23 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         dispatch: dispatch,
-        selectSensorType: (sensorTypes) => {
-            dispatch(
-                selectSensorType(
-                    sensorTypes.id
-                )
-            );
-            // Configure the foi form
-            dispatch(
-                foiSamplingForced(sensorTypes.foiType)
-            );
-        },
-        selectObservationType: (id) => {
-            dispatch(selectObservationType(id))
-        },
+        // selectSensorType: (sensorTypes) => {
+        //     dispatch(
+        //         selectSensorType(
+        //             sensorTypes.id
+        //         )
+        //     );
+        //     // Configure the foi form
+        //     dispatch(
+        //         foiSamplingForced(sensorTypes.foiType)
+        //     );
+        // },
+        // selectObservationType: (id) => {
+        //     dispatch(selectObservationType(id))
+        // },
+        // selectFoi: (foi) => {
+        //     dispatch(selectFoi(foi))
+        // },
         toggleResultType: (id) => {
             dispatch(toggleResultType(id))
         },
@@ -80,9 +82,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         register_sensor: (insertsensor) => {
             dispatch(register_sensor(insertsensor));
-        },
-        toggleFoiEdit: (status) => {
-            dispatch(toggleFoiEdit(status));
         }
     }
 };

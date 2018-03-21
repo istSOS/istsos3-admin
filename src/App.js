@@ -25,18 +25,24 @@ import InsertSensorContainer from './pages/create/sensor/insertSensorContainer';
 import OfferingCreator from './create/offering/offeringCreatorContainer';
 import Specimen from './pages/create/specimen/specimenContainer';
 
+// Inject reducers
+import {
+    store,
+    injectReducer
+} from 'istsos3-core';
+
 // istSOS Plugins
 import {
     Viewer,
     reducers
 } from 'istsos3-viewer';
 
-// Inject reducers
 import {
-    store,
-    injectReducer
-} from 'istsos3-core';
+    reducers as ui_reducer
+} from 'istsos3-ui';
+
 injectReducer(store, reducers);
+injectReducer(store, ui_reducer);
 
 const routes = [
     {

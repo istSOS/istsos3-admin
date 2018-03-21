@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import {
+    fetchUoms,
+    fetchObservableProperties
+} from 'istsos3-core';
+
+import {
     setSensorName,
     checkSensorName,
     removeObservableProperty,
@@ -9,13 +14,32 @@ import {
     observedPropertySelected,
     setKeyword,
     removeKeyword,
-    updateMetadata
+    updateMetadata,
+    observablePropertySelected,
+    observationTypeSelected,
+    uomSelected
 } from './sensorFormAction';
 
 import SensorFormMetadata from './sensorFormMetadata';
 import SensorFormObsProp from './sensorFormObsProp';
 
 class SensorForm extends Component {
+    componentDidMount() {
+        const {
+            dispatch,
+            uoms,
+            observed_properties,
+            layout
+        } = this.props;
+        if(layout==="observedproperties"){
+            if(uoms.data.length===0){
+                dispatch(fetchUoms());
+            }
+            if(observed_properties.data.length===0){
+                dispatch(fetchObservableProperties());
+            }
+        }
+    }
     render() {
         const {
             layout
@@ -37,6 +61,8 @@ class SensorForm extends Component {
 const mapStateToProps = (state, ownProps) => {
     return {
         sensorform: state.sensorform,
+        uoms: state.uoms,
+        observed_properties: state.observableproperties,
         layout: 'metadata',
         ...ownProps
     };
@@ -68,6 +94,15 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         updateMetadata: (key, value) => {
             dispatch(updateMetadata(key, value))
+        },
+        observablePropertySelected: (selected) => {
+            dispatch(observablePropertySelected(selected))
+        },
+        observationTypeSelected: (selected) => {
+            dispatch(observationTypeSelected(selected))
+        },
+        uomSelected: (selected) => {
+            dispatch(uomSelected(selected))
         }
     }
 };

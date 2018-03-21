@@ -6,19 +6,19 @@ export function register_sensor(data) {
     return fetch('CREATE_SENSOR', data);
 }
 
-export const selectSensorType = (id) => {
-    return {
-        type: 'SELECT_SENSOR_TYPE',
-        sensorType: id
-    }
-}
+// export const selectObservationType = (id) => {
+//     return {
+//         type: 'SELECT_OBSERVATION_TYPE',
+//         observationType: id
+//     }
+// }
 
-export const selectObservationType = (id) => {
-    return {
-        type: 'SELECT_OBSERVATION_TYPE',
-        observationType: id
-    }
-}
+// export const selectFoi = (foi) => {
+//     return {
+//         type: 'INSERT_SENSOR_EXISTING_FOI_SELECTED',
+//         foi: foi
+//     }
+// }
 
 export const toggleResultType = (id) => {
     return {
@@ -27,12 +27,12 @@ export const toggleResultType = (id) => {
     }
 }
 
-export const toggleFoiEdit = (status) => {
-    return {
-        type: 'TOGGLE_FOI_EDIT',
-        status: status
-    }
-}
+// export const toggleFoiEdit = (status) => {
+//     return {
+//         type: 'TOGGLE_FOI_EDIT',
+//         status: status
+//     }
+// }
 
 export const setWizardPage = (page) => {
     return {

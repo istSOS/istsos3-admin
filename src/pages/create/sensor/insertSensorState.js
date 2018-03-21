@@ -1,10 +1,15 @@
-import {setting} from '../../../common';
+//import {setting} from '../../../common';
 
 const initialState = {
     wizardPage: 1,
     isFetching: false,
     skipSpecimen: false,
     newfoi: false,
+    selectedFoi: null,
+
+    sensor: null,
+    metadataValid: false,
+    observedPropertiesValid: false,
 
     // Initial config selection
     sensorType: null,
@@ -23,51 +28,10 @@ const initialState = {
         uom: null,
         observedProperty: null,
         resultType: null
-    },
-
-    // Local store
-    sensorTypes: {
-        "1": {
-            id: '1',
-            name: "Insitu Fixed",
-            description: "Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur aliquet quam id dui posuere blandit.",
-            fixed: true,
-            icon: "/img/st/1.png",
-            foiType: setting._SAMPLING_POINT
-        },
-        /*"2": {
-            id: '2',
-            name: "Insitu Mobile",
-            description: "Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur aliquet quam id dui posuere blandit.",
-            fixed: false,
-            icon: "/img/st/2.png",
-            foiType: setting._SAMPLING_CURVE
-        },*/
-        "3": {
-            id: '3',
-            name: "Specimen fixed",
-            description: "Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur aliquet quam id dui posuere blandit.",
-            fixed: true,
-            icon: "/img/st/3.png",
-            foiType: setting._SAMPLING_SPECIMEN
-        }
-    },
-
-    observationTypes: {
-        "1": {
-            name: "Single Observation in Time",
-            description: "Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur aliquet quam id dui posuere blandit.",
-            icon: "/img/ot/1.png"
-        },
-        "2": {
-            name: "Multiple Observation in Time",
-            description: "Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur aliquet quam id dui posuere blandit.",
-            icon: "/img/ot/2.png"
-        }
     }
 };
 
-const insertsensor = (state = initialState, action) => {
+const web_insertsensor = (state = initialState, action) => {
 
     let copy, idx;
 
@@ -77,6 +41,12 @@ const insertsensor = (state = initialState, action) => {
             return {
                 ...state,
                 wizardPage: action.page
+            };
+
+        case 'INSERT_SENSOR_EXISTING_FOI_SELECTED':
+            return {
+                ...state,
+                selectedFoi: action.foi
             };
 
         case 'PREVIEWS_INS_SENS_WIZARD_PAGE':
@@ -138,11 +108,11 @@ const insertsensor = (state = initialState, action) => {
                 newfoi: action.status
             };
 
-        case 'SELECT_OBSERVATION_TYPE':
-            return {
-                ...state,
-                observationType: action.observationType
-            };
+        // case 'SELECT_OBSERVATION_TYPE':
+        //     return {
+        //         ...state,
+        //         observationType: action.observationType
+        //     };
 
         case 'TOGGLE_OBSERVATION_TYPE':
             idx = state.resultType.indexOf(action.resultType);
@@ -213,4 +183,4 @@ const insertsensor = (state = initialState, action) => {
     }
 };
 
-export default insertsensor;
+export default web_insertsensor;

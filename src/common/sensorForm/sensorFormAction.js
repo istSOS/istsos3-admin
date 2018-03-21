@@ -26,6 +26,29 @@ export const setSensorName = (text) => {
     }
 }
 
+// Observable property form
+
+export const observablePropertySelected = (selected) => {
+    return {
+        type: 'SENSOR_FORM_OP_SELECTED',
+        selected: selected
+    }
+}
+
+export const uomSelected = (selected) => {
+    return {
+        type: 'SENSOR_FORM_UOM_SELECTED',
+        selected: selected
+    }
+}
+
+export const observationTypeSelected = (selected) => {
+    return {
+        type: 'SENSOR_FORM_OTY_SELECTED',
+        selected: selected
+    }
+}
+
 export const addObservableProperty = () => {
     return {
         type: 'SENSOR_FORM_ADD_OBSERVABLE_PROPERTY'

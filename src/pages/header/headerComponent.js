@@ -8,28 +8,30 @@ import {
 import {
     Menu,
     Dropdown,
-    Icon,
-    Label
+    Icon
 } from 'semantic-ui-react';
 
 class HeaderComponent extends Component {
 
     render() {
         // const {login, checkCredential} = this.props;
-        const { t, location, history } = this.props;
+        const { /*t, */location, history } = this.props;
         return (
             <Menu stackable inverted style={{
-                    backgroundColor: 'rgb(31, 117, 51)'
+                    backgroundColor: 'rgb(31, 117, 51)',
+                    boxShadow: "rgba(50, 50, 50, 0.75) 0px 2px 2px 0px",
+                    margin: '0px',
+                    borderRadius: '0'
                 }}>
                 <Menu.Item style={{
                         "fontWeight": "bold",
                         //"color": "#65f102"
                     }}>
-                    <img src='/img/logo_icon.png' alt="logo" style={{
-                        margin: '0 7px',
-                        width: '1.5em'
+                    <img src='/img/banner.png' alt="logo" style={{
+                        //margin: '0 7px',
+                        height: '16px',
+                        width: '101px'
                     }}/>
-                    istSOS
                 </Menu.Item>
                 <Menu.Item
                     active={location === '/'}
@@ -47,9 +49,9 @@ class HeaderComponent extends Component {
                             history.push("/sensors");
                         }
                     }>
-                    {t('sensors')}
+                    Data viewer
                 </Menu.Item>
-                <Menu.Item
+                {/*<Menu.Item
                     active={location === '/fois'}
                     onClick={
                         e => {
@@ -67,7 +69,7 @@ class HeaderComponent extends Component {
                     }>
                     Chart
                     <Label circular color="red">2</Label>
-                </Menu.Item>
+                </Menu.Item>*/}
 
                 <Menu.Menu position='right'>
                     <Dropdown item text='Add &nbsp;' icon="add">
@@ -110,7 +112,7 @@ class HeaderComponent extends Component {
                             </Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
-                    <Dropdown item text='Settings'>
+                    <Dropdown item text='Settings &nbsp;' icon='setting'>
                         <Dropdown.Menu>
                             <Dropdown.Header>System settings</Dropdown.Header>
                             <Dropdown.Item>Database</Dropdown.Item>

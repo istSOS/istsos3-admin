@@ -30,11 +30,11 @@ class FoisListComponent extends Component {
             fois
         } = this.props;
         return (
-            <Table celled selectable fixed compact singleLine>
+            <Table basic='very' selectable fixed compact singleLine>
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell>
-                            Name
+                            Feature of Interest
                         </Table.HeaderCell>
                         <Table.HeaderCell>
                             Description

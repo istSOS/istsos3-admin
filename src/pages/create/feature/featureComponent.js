@@ -6,9 +6,12 @@ import {
 
 // istSOS components
 import {
-    FoisMap,
-    FoiForm
+    FoisMap
 } from '../../../common';
+
+import {
+    FoiForm
+} from 'istsos3-ui';
 
 // Semantic UI components
 import {

@@ -94,7 +94,7 @@ const sensorform = (state = initialState, action) => {
             copy.keywords.splice(action.index, 1);
             return copy;
 
-        case 'OBSERVABLE_PROPERTY_SELECTED':
+        case 'SENSOR_FORM_OP_SELECTED':
             return {
                 ...state,
                 observableProperty: {
@@ -103,7 +103,7 @@ const sensorform = (state = initialState, action) => {
                 }
             };
 
-        case 'UOM_SELECTED':
+        case 'SENSOR_FORM_UOM_SELECTED':
             return {
                 ...state,
                 observableProperty: {
@@ -112,7 +112,7 @@ const sensorform = (state = initialState, action) => {
                 }
             };
 
-        case 'OBSERVATION_TYPE_SELECTED':
+        case 'SENSOR_FORM_OTY_SELECTED':
             return {
                 ...state,
                 observableProperty: {

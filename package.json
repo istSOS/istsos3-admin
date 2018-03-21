@@ -9,13 +9,13 @@
         "react-dom": "^16.2.0",
         "istsos3-core": "^1.0.0",
         "semantic-ui-css": "^2.2.12",
-        "semantic-ui-react": "^0.77.1"
+        "semantic-ui-react": "^0.78.3"
     },
     "devDependencies": {
-        "react-scripts": "1.0.17"
+        "react-scripts": "1.1.1"
     },
     "dependencies": {
-        "axios": "^0.17.1",
+        "axios": "^0.18.0",
         "i18next": "^10.2.1",
         "i18next-browser-languagedetector": "^2.1.0",
         "moment": "^2.20.1",
@@ -30,7 +30,7 @@
         "redux": "^3.7.2",
         "redux-thunk": "^2.2.0",
         "semantic-ui-css": "^2.2.12",
-        "semantic-ui-react": "^0.77.1"
+        "semantic-ui-react": "^0.78.3"
     },
     "scripts": {
         "start": "react-scripts start",
