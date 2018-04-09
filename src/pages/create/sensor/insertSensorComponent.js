@@ -4,34 +4,26 @@ import {
   withRouter
 } from 'react-router-dom';
 
-
-// istSOS components
 import {
-    foiform2entity
-} from '../../../common/foiForm/foiFormAction';
-
-import {
-    //Material,
-    //Uoms,
-    FoisMap,
-    //SensorForm,
-    SpecimenForm,
-    //FoisList,
-    setting
+    FoisMap
 } from '../../../common';
+
+import {
+    setting
+} from 'istsos3-core';
 
 import {
     Mappa,
     Fois,
     SensorForm,
-    FoiForm
+    FoiForm,
+    SpecimenForm
 } from 'istsos3-ui';
 
 //import Fois from '../fois/foisContainer';
 
 // Semantic UI components
 import {
-    Grid,
     Card,
     Segment,
     Icon,
@@ -102,16 +94,23 @@ class InsertSensorComponent extends Component {
             // Sensor metadata
             sensor: null,
 
+            // Specimen metadata
+            specimen: null,
+
             // Selected existing Foi
             existingFoi: null,
             newFoi: null,
             foiValid: false,
+            fiex: [],
+            coordinates: [],
 
             // Validations
             metadataValid: false,
+            specimenValid: false,
             observedPropertiesValid: false,
         };
         this.sensorMetadataChanged = this.sensorMetadataChanged.bind(this);
+        this.specimenMetadataChanged = this.specimenMetadataChanged.bind(this);
         this.sensorObservedPropertiesChanged = this.sensorObservedPropertiesChanged.bind(this);
         this.selectSensorType = this.selectSensorType.bind(this);
         this.selectObservationType = this.selectObservationType.bind(this);
@@ -147,6 +146,17 @@ class InsertSensorComponent extends Component {
                 ...metadata
             },
             metadataValid: valid
+        });
+    }
+
+    specimenMetadataChanged (metadata, valid) {
+        this.setState({
+            ...this.state,
+            specimen: {
+                ...this.state.specimen,
+                ...metadata
+            },
+            specimenValid: valid === undefined? this.state.specimenValid: valid
         });
     }
 
@@ -202,17 +212,15 @@ class InsertSensorComponent extends Component {
             existingFoi: foi,
             sensor: {
                 ...this.state.sensor,
-                sampled_foi: {
-                    ...foi
-                }
+                sampled_foi: foi.shape === null?
+                    foi.identifier: {
+                        ...foi
+                    }
             }
         });
     }
 
     startPage(){
-        // const {
-        //     insertsensor
-        // } = this.props;
         const sensorTypes = this.local.sensorTypes;
         const sensorTypesArr = Object.keys(sensorTypes);
         const observationTypes = this.local.observationTypes;
@@ -375,46 +383,48 @@ class InsertSensorComponent extends Component {
     }
 
     finish = () => {
-        // const {
-        //     register_sensor
-        // } = this.props;
+        const {
+            registerSensor
+        } = this.props;
 
         let config = null;
 
         // Add the speciment template if sensor type is SF_Specimen
-        // if (insertsensor.sensorType === '3' && !insertsensor.skipSpecimen){
-        //     config = {
-        //         "specimen": specimenform.data
-        //     };
-        // }
+        if (this.state.sensorType === '3' && !this.state.skipSpecimen){
+            config = {
+                "specimen": {
+                    ...this.state.specimen
+                }
+            };
+        }
 
         console.log({
-            ...this.state.sensor,
+            ...{
+                ...this.state.sensor,
+                foi_type: this.state.foiType
+            },
             "fixed": this.local.sensorTypes[
                 this.state.sensorType
             ].fixed,
             "config": config
         });
-        // register_sensor({
-        //     ...this.state.sensor,
-        //     "fixed": this.local.sensorTypes[
-        //         this.state.sensorType
-        //     ].fixed,
-        //     "config": config
-        // });
+        registerSensor({
+            ...{
+                ...this.state.sensor,
+                foi_type: this.state.foiType
+            },
+            "fixed": this.local.sensorTypes[
+                this.state.sensorType
+            ].fixed,
+            "config": config
+        });
     }
 
     render() {
         const {
-            //observableproperties,
             history,
-            specimenform,
-            insertsensor,
-            skipSpecimentPage,
-            //sensorform,
             foiform,
-            fois,
-            map
+            fois
         } = this.props;
 
         return (
@@ -437,24 +447,51 @@ class InsertSensorComponent extends Component {
                         path='/create/sensor/specimen'
                         exact={true}
                         render={(routeProps) => (
-                            <div>
-                                <Header as='h3'>
-                                    Specimen template
-                                </Header>
-                                <SpecimenForm
-                                    hidden={['time']}/>
-                            </div>
-                        )}/>
-                    <Route
-                        path='/create/sensor/specimen/processing'
-                        exact={true}
-                        render={(routeProps) => (
-                            <div>
-                                <Header as='h3'>
-                                    Specimen template
-                                </Header>
-                                <SpecimenForm
-                                    layout="processing"/>
+                            <div style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    height: '100%'
+                                }}>
+                                <div style={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        flex: '1 1 0%'
+                                        //alignItems: 'center'
+                                    }}>
+                                    <div style={{
+                                            margin: "2rem 3.5em 0.875em 1.5em",
+                                            maxWidth: "450px"
+                                        }}>
+                                        <Header as="h3">
+                                            <Icon name='newspaper' />
+                                            <Header.Content>
+                                                Specimen template
+                                            </Header.Content>
+                                        </Header>
+                                        <p>
+                                        Donec sollicitudin molestie malesuada. Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem.
+                                        </p>
+                                        <p>
+                                        Pellentesque in ipsum id orci porta dapibus. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem.
+                                        </p>
+                                        <p>
+                                        Quisque velit nisi, pretium ut lacinia in, elementum id enim.
+                                        </p>
+                                    </div>
+                                    <Segment style={{
+                                            flex: '1 1 0%',
+                                            overflowY: "auto",
+                                            padding: "2rem"
+                                        }}>
+                                        <SpecimenForm
+                                            layout="template"
+                                            specimen={
+                                                this.state.specimen === null?
+                                                undefined: this.state.specimen
+                                            }
+                                            onChange={this.specimenMetadataChanged}/>
+                                    </Segment>
+                                </div>
                             </div>
                         )}/>
                     <Route
@@ -638,16 +675,19 @@ class InsertSensorComponent extends Component {
                                                 }}>
                                             {
                                                 this.state.newTab?
-                                                [
+
+                                                <FoiForm
+                                                    showMap={true}
+                                                    foiType={this.state.foiType}
+                                                    foi={this.state.newFoi}
+                                                    onChange={this.foiChanged}/>
+                                                /*[
                                                     <Segment.Group key="isc-fl" style={{
                                                             flex: "0.4 1 0%",
                                                             flexDirection: "column",
                                                             display: "flex",
                                                             margin: "0px"
                                                         }}>
-                                                        {/*<Segment color='black'>
-                                                            <Header sub>Feature of interests:</Header>
-                                                        </Segment>*/}
                                                         <Segment style={{
                                                                 flex: "1 1 0%",
                                                                 overflowY: "auto"
@@ -662,16 +702,32 @@ class InsertSensorComponent extends Component {
                                                                 flex: "0.6 1 0%"
                                                             }}>
                                                         <Mappa key="isc-fm1"
-                                                            highlighted={
-                                                                this.state.sensor != null && this.state.sensor.hasOwnProperty('sampled_foi')?
-                                                                    [this.state.sensor.sampled_foi.id]: []
-                                                            }
-                                                            fois={{
-                                                                data: fois.data,
-                                                                isFetching: fois.isFetching
+                                                            fois={fois.data}
+                                                            isFetching={fois.isFetching}
+                                                            editing={setting._SAMPLING_TYPES[this.state.foiType].name}
+                                                            foi={this.state.newFoi}
+                                                            changefeature={(foi)=>{
+                                                                this.setState({
+                                                                    newFoi: {
+                                                                        ...this.state.newFoi,
+                                                                        shape: {
+                                                                            ...foi.shape
+                                                                        }
+                                                                    }
+                                                                })
+                                                            }}
+                                                            addfeature={(foi)=>{
+                                                                this.setState({
+                                                                    newFoi: {
+                                                                        ...this.state.newFoi,
+                                                                        shape: {
+                                                                            ...foi.shape
+                                                                        }
+                                                                    }
+                                                                })
                                                             }}/>
                                                     </div>
-                                                ]:
+                                                ]*/:
                                                 [
                                                     <Segment.Group key="isc-fl" style={{
                                                             flex: "0.4 1 0%",
@@ -699,7 +755,7 @@ class InsertSensorComponent extends Component {
                                                                     this.selectFoi(foi);
                                                                 }}
                                                                 filter={{
-                                                                    map_ids: map.fiex
+                                                                    map_ids: this.state.fiex
                                                                 }}/>
                                                         </Segment>
                                                     </Segment.Group>,
@@ -711,9 +767,13 @@ class InsertSensorComponent extends Component {
                                                                 this.state.sensor != null && this.state.sensor.hasOwnProperty('sampled_foi')?
                                                                     [this.state.sensor.sampled_foi.id]: []
                                                             }
-                                                            fois={{
-                                                                data: fois.data,
-                                                                isFetching: fois.isFetching
+                                                            fois={fois.data}
+                                                            isFetching={fois.isFetching}
+                                                            moveend={(features)=>{
+                                                                console.log(features);
+                                                                this.setState({
+                                                                    fiex: features
+                                                                })
                                                             }}/>
                                                     </div>
                                                 ]
@@ -815,56 +875,34 @@ class InsertSensorComponent extends Component {
                                     key={'fwcsc-2'}>
                                     <div>
                                         <Button
-                                            primary={specimenform.valid}
-                                            disabled={!specimenform.valid}
+                                            primary={this.state.specimenValid}
+                                            disabled={!this.state.specimenValid}
                                             fluid
                                             content='Continue'
                                             onClick={(e)=>(
-                                                history.push(
-                                                    '/create/sensor/specimen/processing'
-                                                )
+                                                this.setState({
+                                                    skipSpecimen: false
+                                                }, () => {
+                                                    history.push(
+                                                        '/create/sensor/metadata'
+                                                    )
+                                                })
                                             )}/>
                                         <Divider horizontal>Or</Divider>
                                         <Button
-                                            primary={!specimenform.valid}
-                                            secondary={specimenform.valid}
+                                            primary={!this.state.specimenValid}
+                                            secondary={this.state.specimenValid}
                                             fluid
                                             content='Skip'
                                             onClick={(e)=>{
-                                                skipSpecimentPage();
-                                                history.push(
-                                                    '/create/sensor/metadata'
-                                                )
+                                                this.setState({
+                                                    skipSpecimen: true
+                                                }, () => {
+                                                    history.push(
+                                                        '/create/sensor/metadata'
+                                                    )
+                                                })
                                             }}/>
-                                    </div>
-                                </Card.Content>
-                            ])}/>
-                        <Route
-                            path='/create/sensor/specimen/processing'
-                            exact={true}
-                            render={() => ([
-                                <Card.Content
-                                    key={'fwcsc-1'}>
-                                    <Card.Header>
-                                        Registering a new sensor
-                                    </Card.Header>
-                                    <Card.Description>
-                                        Each time a new speciment will be
-                                        collected this is the date that will
-                                        be filled by default.
-                                    </Card.Description>
-                                </Card.Content>,
-                                <Card.Content extra
-                                    key={'fwcsc-2'}>
-                                    <div className='ui two buttons'>
-                                        <Button
-                                            fluid
-                                            content='Continue'
-                                            onClick={(e)=>(
-                                                history.push(
-                                                    '/create/sensor/metadata'
-                                                )
-                                            )}/>
                                     </div>
                                 </Card.Content>
                             ])}/>

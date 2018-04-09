@@ -7,16 +7,14 @@ import { withRouter } from 'react-router-dom';
 //     foiSamplingForced
 // } from '../../../common/foiForm/foiFormAction';
 
+// import {
+//     skipSpecimentPage,
+//     //selectFoi
+// } from './insertSensorAction';
+
 import {
-    toggleResultType,
-    setWizardPage,
-    nextWizardPage,
-    prevWizardPage,
-    register_sensor,
-    geometryAdded,
-    skipSpecimentPage,
-    //selectFoi
-} from './insertSensorAction';
+    registerSensor
+} from 'istsos3-core';
 
 import InsertSensorComponent from './insertSensorComponent';
 
@@ -37,51 +35,15 @@ const mapStateToProps = (state, ownProps) => {
         foiform: state.foiform,
         foisstate: state.foisstate,
         observableproperties: state.observableproperties,
-        sensorform: state.sensorform,
-        specimenform: state.specimenform
+        sensorform: state.sensorform
     };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         dispatch: dispatch,
-        // selectSensorType: (sensorTypes) => {
-        //     dispatch(
-        //         selectSensorType(
-        //             sensorTypes.id
-        //         )
-        //     );
-        //     // Configure the foi form
-        //     dispatch(
-        //         foiSamplingForced(sensorTypes.foiType)
-        //     );
-        // },
-        // selectObservationType: (id) => {
-        //     dispatch(selectObservationType(id))
-        // },
-        // selectFoi: (foi) => {
-        //     dispatch(selectFoi(foi))
-        // },
-        toggleResultType: (id) => {
-            dispatch(toggleResultType(id))
-        },
-        setWizardPage: (id) => {
-            dispatch(setWizardPage(id))
-        },
-        nextWizardPage: () => {
-            dispatch(nextWizardPage())
-        },
-        skipSpecimentPage: () => {
-            dispatch(skipSpecimentPage())
-        },
-        prevWizardPage: () => {
-            dispatch(prevWizardPage())
-        },
-        geometryAdded: (geometryType, geometry) => {
-            dispatch(geometryAdded(geometryType, geometry))
-        },
-        register_sensor: (insertsensor) => {
-            dispatch(register_sensor(insertsensor));
+        registerSensor: (insertsensor) => {
+            dispatch(registerSensor(insertsensor));
         }
     }
 };
